@@ -52,23 +52,3 @@ add_action( 'plugins_loaded', 'ekiline_blocks_textdomain' );
 require plugin_dir_path( __FILE__ ) . '/quote/quote.php';
 require plugin_dir_path( __FILE__ ) . '/gallery/gallery.php';
 require plugin_dir_path( __FILE__ ) . '/ekiline-carousel/ekiline-carousel.php';
-
-/**
- * Tutorial para crear un bloque
- */
-// https://developer.wordpress.org/block-editor/tutorials/create-block/
-// ** hacer uso de "create a block" https://www.npmjs.com/package/@wordpress/create-block
-/// npx @wordpress/create-block gutenpride
-
-// npm run start => publica con desglose de contenido.
-// npm run build => publica con contenido compreso.
-
-/**
- * Crear ordenes para un plugin.
- * https://developer.wordpress.org/block-editor/tutorials/plugin-sidebar-0/plugin-sidebar-1-up-and-running/
- */
-// require plugin_dir_path( __FILE__ ) . '/sidebar/sidebar.php';
-/**
- * Plugin Name: Sidebar plugin
- */
-
