@@ -63,7 +63,6 @@ const setClassName = () => {
  */
 export default function Edit(props) {
 
-	// const blockProps = useBlockProps();
 	const { attributes, setAttributes, blockProps = useBlockProps() } = props;
 	const boxClass = setClassName();
 
@@ -72,8 +71,8 @@ export default function Edit(props) {
 		if ( categories ){
 			return (
 				<SelectControl
-					multiple // multiples valores seleccionados.
-					label="Selecciona la categoria"
+					multiple
+					label={ __( 'Choose category', 'ekiline' ) }
 					value={ attributes.SetIds }
 					options={ categories.map( ( category ) => (
 						{ label: category.name, value: category.id }
@@ -101,11 +100,11 @@ export default function Edit(props) {
 				<PanelBody title="Contenido de carrusel" initialOpen={ true }>
 
 					<SelectControl
-						label="Tipo de contenido"
+						label={ __( 'Content type', 'ekiline' ) }
 						value={ attributes.ChooseType }
 						options={ [
-							{ label: 'Posts', value: 'posts' },
-							{ label: 'Images', value: 'images' },
+							{ label: __( 'Posts', 'ekiline' ), value: 'posts' },
+							{ label: __( 'Images', 'ekiline' ), value: 'images' },
 						] }
 						onChange={ ( ChooseType ) =>
 							setAttributes( { ChooseType } )
@@ -119,9 +118,7 @@ export default function Edit(props) {
 					{ 'images' === attributes.ChooseType && (
 						<MediaUploadCheck>
 							<MediaUpload
-								title={ __(
-									'Ekiline Carousel: Seleccionar imagenes'
-								) }
+								title={ __( 'Carousel Images', 'ekiline' ) }
 								onSelect={ ( media ) => {
 									const img_ids = [];
 									for (
@@ -138,7 +135,7 @@ export default function Edit(props) {
 								value={ attributes.SetIds }
 								render={ ( { open } ) => (
 									<Button isSecondary onClick={ open }>
-										{ __( 'Seleccionar imagenes' ) }
+										{ __( 'Add images', 'ekiline' ) }
 									</Button>
 								) }
 								gallery={ false }
@@ -149,7 +146,7 @@ export default function Edit(props) {
 
 					{ 'posts' === attributes.ChooseType && (
 						<TextControl
-							label={ __( '¿Cuantas publicaciones?', 'ekiline' ) }
+							label={ __( 'Post amount', 'ekiline' ) }
 							type="number"
 							value={ attributes.SetAmount }
 							onChange={ ( newval ) =>
@@ -162,15 +159,15 @@ export default function Edit(props) {
 
 					{ 'posts' === attributes.ChooseType && (
 						<SelectControl
-							label="Organizar por:"
+							label={ __( 'Sort by', 'ekiline' ) }
 							value={ attributes.SetOrderBy }
 							options={ [
-								{ label: 'Date', value: 'date' },
-								{ label: 'Modified', value: 'modified' },
-								{ label: 'Title', value: 'title' },
-								{ label: 'Name', value: 'name' },
-								{ label: 'Author', value: 'author' },
-								{ label: 'Rand', value: 'rand' },
+								{ label: __( 'Date', 'ekiline' ), value: 'date' },
+								{ label: __( 'Modified', 'ekiline' ), value: 'modified' },
+								{ label: __( 'Title', 'ekiline' ), value: 'title' },
+								{ label: __( 'Name', 'ekiline' ), value: 'name' },
+								{ label: __( 'Author', 'ekiline' ), value: 'author' },
+								{ label: __( 'Random', 'ekiline' ), value: 'rand' },
 							] }
 							onChange={ ( SetOrderBy ) =>
 								setAttributes( { SetOrderBy } )
@@ -180,20 +177,14 @@ export default function Edit(props) {
 
 					{ 'posts' === attributes.ChooseType && (
 						<SelectControl
-							label={ __(
-								'Buscar un bloque en un post',
-								'ekiline'
-							) }
+							label={ __( 'Find a block in content', 'ekiline' ) }
 							value={ attributes.FindBlock }
 							options={ [
-								{ label: 'None', value: 'none' },
-								{ label: 'Block', value: 'core/block' },
-								{
-									label: 'Comments',
-									value: 'core/latest-comments',
-								},
-								{ label: 'Archives', value: 'core/archives' },
-								{ label: 'Cover', value: 'core/cover' },
+								{ label: __( 'None', 'ekiline' ), value: 'none' },
+								{ label: __( 'Cover', 'ekiline' ), value: 'core/cover' },
+								{ label: __( 'Image', 'ekiline' ), value: 'core/image' },
+								{ label: __( 'Media and text', 'ekiline' ), value: 'core/media-text' },
+								{ label: __( 'Video', 'ekiline' ), value: 'core/video' },
 							] }
 							onChange={ ( FindBlock ) =>
 								setAttributes( { FindBlock } )
@@ -203,10 +194,7 @@ export default function Edit(props) {
 
 					{ 'none' !== attributes.FindBlock && (
 						<ToggleControl
-							label={ __(
-								'Si no hay bloque, permitir ver publicacion',
-								'ekiline'
-							) }
+							label={ __( 'Show post if there is no block', 'ekiline' ) }
 							checked={ attributes.AllowMixed }
 							onChange={ ( AllowMixed ) =>
 								setAttributes( { AllowMixed } )
@@ -215,9 +203,9 @@ export default function Edit(props) {
 					) }
 				</PanelBody>
 
-				<PanelBody title="Vista de carrusel" initialOpen={ false }>
+				<PanelBody title={ __( 'Carousel Look', 'ekiline' ) } initialOpen={ false }>
 					<RangeControl
-						label={ __( 'Columnas', 'ekiline' ) }
+						label={ __( 'Columns', 'ekiline' ) }
 						value={ attributes.SetColumns }
 						onChange={ ( newval ) =>
 							setAttributes( { SetColumns: parseInt( newval ) } )
@@ -227,7 +215,7 @@ export default function Edit(props) {
 					/>
 
 					<ToggleControl
-						label={ __( 'Mostrar controles', 'ekiline' ) }
+						label={ __( 'Show controls', 'ekiline' ) }
 						checked={ attributes.AddControls }
 						onChange={ ( AddControls ) =>
 							setAttributes( { AddControls } )
@@ -235,7 +223,7 @@ export default function Edit(props) {
 					/>
 
 					<ToggleControl
-						label={ __( 'Mostrar indicadores', 'ekiline' ) }
+						label={ __( 'Show indicators', 'ekiline' ) }
 						checked={ attributes.AddIndicators }
 						onChange={ ( AddIndicators ) =>
 							setAttributes( { AddIndicators } )
@@ -243,13 +231,13 @@ export default function Edit(props) {
 					/>
 
 					<ToggleControl
-						label={ __( 'Iniciar automáticamente', 'ekiline' ) }
+						label={ __( 'Auto start', 'ekiline' ) }
 						checked={ attributes.SetAuto }
 						onChange={ ( SetAuto ) => setAttributes( { SetAuto } ) }
 					/>
 
 					<TextControl
-						label={ __( 'Transición en milisegundos', 'ekiline' ) }
+						label={ __( 'Transition in milliseconds', 'ekiline' ) }
 						type="number"
 						value={ attributes.SetTime }
 						onChange={ ( newval ) =>
@@ -258,12 +246,12 @@ export default function Edit(props) {
 					/>
 
 					<SelectControl
-						label={ __( 'Tipo de animacion', 'ekiline' ) }
+						label={ __( 'Animation type', 'ekiline' ) }
 						value={ attributes.SetAnimation }
 						options={ [
-							{ label: 'Default', value: '' },
-							{ label: 'Fade', value: 'fade' },
-							{ label: 'Vertical', value: 'vertical' },
+							{ label: __( 'Default', 'ekiline' ), value: '' },
+							{ label: __( 'Fade', 'ekiline' ), value: 'fade' },
+							{ label: __( 'Vertical', 'ekiline' ), value: 'vertical' },
 						] }
 						onChange={ ( SetAnimation ) =>
 							setAttributes( { SetAnimation } )
