@@ -49,6 +49,4 @@ add_action( 'plugins_loaded', 'ekiline_blocks_textdomain' );
  * Estas pruebas modifican cosas como el estilo, en cada caso se registra un script y un estilo.
  * No hace más.
  */
-require plugin_dir_path( __FILE__ ) . '/quote/quote.php';
-require plugin_dir_path( __FILE__ ) . '/gallery/gallery.php';
 require plugin_dir_path( __FILE__ ) . '/ekiline-carousel/ekiline-carousel.php';
