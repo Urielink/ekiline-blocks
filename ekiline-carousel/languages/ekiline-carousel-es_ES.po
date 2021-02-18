@@ -1,0 +1,140 @@
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Project-Id-Version: Ekiline Carousel\n"
+"POT-Creation-Date: 2021-02-17 18:15-0600\n"
+"PO-Revision-Date: 2021-02-17 18:50-0600\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: ekiline-carousel\n"
+"X-Generator: Poedit 1.8.12\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: ekiline-carousel.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Last-Translator: \n"
+"Language: es_ES\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#. Plugin Name of the plugin/theme
+msgid "Ekiline Carousel"
+msgstr "Ekiline Carrusel"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://bixnia.com"
+msgstr "https://bixnia.com/"
+
+#. Description of the plugin/theme
+msgid ""
+"Plugin for Ekiline theme, add a carousel to your posts, choose between posts "
+"or images, colmuns and more."
+msgstr ""
+"Plugin para el tema Ekiline, añadir un carrusel a sus publicaciones, elegir "
+"entre mensajes o imágenes, colmuns y más."
+
+#. Author of the plugin/theme
+msgid "Uri Lazcano"
+msgstr "Uri Lazcano"
+
+#. edit.js
+msgid "Choose category"
+msgstr "Seleccione una categoría"
+
+msgid "Carousel content"
+msgstr "Contenido del carrusel"
+
+msgid "Content type"
+msgstr "Tipo de contenido"
+
+msgid "Posts"
+msgstr "Entradas"
+
+msgid "Images"
+msgstr "Imágenes"
+
+msgid "Carousel Images"
+msgstr "Imágenes del carrusel"
+
+msgid "Add images"
+msgstr "Agregar imágenes"
+
+msgid "Post amount"
+msgstr "Cantidad"
+
+msgid "Sort by"
+msgstr "Ordenar por"
+
+msgid "Date"
+msgstr "Fecha"
+
+msgid "Modified"
+msgstr "Modificado"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Author"
+msgstr "Autor"
+
+msgid "Random"
+msgstr "Aleatorio"
+
+msgid "Find a block in content"
+msgstr "Encontrar un bloque en el contenido"
+
+msgid "None"
+msgstr "Ninguno"
+
+msgid "Cover"
+msgstr "Cover"
+
+msgid "Image"
+msgstr "Imagen"
+
+msgid "Media and text"
+msgstr "Medios y texto"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "Carousel Look"
+msgstr "Diseño"
+
+msgid "Columns"
+msgstr "Columnas"
+
+msgid "Show controls"
+msgstr "Mostrar Controles"
+
+msgid "Show indicators"
+msgstr "Mostrar indicadores"
+
+msgid "Auto start"
+msgstr "Arranque automático"
+
+msgid "Transition in milliseconds"
+msgstr "Transición en milisegundos"
+
+msgid "Animation type"
+msgstr "Tipo de animación"
+
+msgid "Default"
+msgstr "Default"
+
+msgid "Fade"
+msgstr "Desvanecer"
+
+msgid "Vertical"
+msgstr "Vertical"
+
+msgid "Preview"
+msgstr "Vista previa"

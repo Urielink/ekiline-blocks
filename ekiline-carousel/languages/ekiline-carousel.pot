@@ -1,0 +1,136 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Ekiline Carousel\n"
+"POT-Creation-Date: 2021-02-17 18:49-0600\n"
+"PO-Revision-Date: 2020-10-20 18:57-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: ekiline-carousel\n"
+"X-Generator: Poedit 1.8.12\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: ekiline-carousel.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;"
+"esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#. Plugin Name of the plugin/theme
+msgid "Ekiline Carousel"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://bixnia.com"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Plugin for Ekiline theme, add a carousel to your posts, choose between posts or images, colmuns and more."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Uri Lazcano"
+msgstr ""
+
+#. edit.js
+msgid "Choose category"
+msgstr ""
+
+msgid "Carousel content"
+msgstr ""
+
+msgid "Content type"
+msgstr ""
+
+msgid "Posts"
+msgstr ""
+
+msgid "Images"
+msgstr ""
+
+msgid "Carousel Images"
+msgstr ""
+
+msgid "Add images"
+msgstr ""
+
+msgid "Post amount"
+msgstr ""
+
+msgid "Sort by"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Modified"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Author"
+msgstr ""
+
+msgid "Random"
+msgstr ""
+
+msgid "Find a block in content"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Cover"
+msgstr ""
+
+msgid "Image"
+msgstr ""
+
+msgid "Media and text"
+msgstr ""
+
+msgid "Video"
+msgstr ""
+
+msgid "Carousel Look"
+msgstr ""
+
+msgid "Columns"
+msgstr ""
+
+msgid "Show controls"
+msgstr ""
+
+msgid "Show indicators"
+msgstr ""
+
+msgid "Auto start"
+msgstr ""
+
+msgid "Transition in milliseconds"
+msgstr ""
+
+msgid "Animation type"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "Fade"
+msgstr ""
+
+msgid "Vertical"
+msgstr ""
+
+msgid "Preview"
+msgstr ""

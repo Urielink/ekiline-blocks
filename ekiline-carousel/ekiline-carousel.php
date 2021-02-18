@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:     Ekiline Carousel
- * Description:     Aqui va la descripcion del plugin
+ * Description:     Plugin for Ekiline theme, add a carousel to your posts, choose between posts or images, colmuns and more.
  * Version:         0.1.0
  * Author:          Uri Lazcano (Urielink)
  * License:         GPL-2.0-or-later
