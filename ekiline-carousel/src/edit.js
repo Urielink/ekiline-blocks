@@ -267,7 +267,7 @@ export default function Edit(props) {
 						icon="dashicons dashicons-visibility"
 						title={ __( 'Preview', 'ekiline-carousel' ) }
 						onClick={ () => {
-							transformarCarrusel(
+							ekiline_transformarCarrusel(
 								'.' + boxClass + ' .carousel-multiple'
 							);
 						} }
