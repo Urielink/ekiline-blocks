@@ -51,3 +51,14 @@ add_action( 'plugins_loaded', 'ekiline_blocks_textdomain' );
  */
 require plugin_dir_path( __FILE__ ) . '/ekiline-carousel/shortcode-ekiline-carousel.php';
 require plugin_dir_path( __FILE__ ) . '/ekiline-carousel/ekiline-carousel.php';
+
+// Funciones de tema a heredar en este plugin.
+
+/**
+ * Meta KeyWords, extender, permitirlas en la páginas.
+ * meta keywords, extend this to use in pages.
+ **/
+function ekiline_tags_support_all() {
+	register_taxonomy_for_object_type( 'post_tag', 'page' );
+}
+// add_action( 'init', 'ekiline_tags_support_all' );
