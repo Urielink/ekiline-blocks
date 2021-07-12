@@ -178,8 +178,8 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 
 	if ( $carousel ) {
 		$uniq_id   = 'carousel_module_' . wp_rand( 1, 99 );
-		$auto      = ( 'false' !== $auto ) ? ' data-ride="carousel"' : '';
-		$time      = ( $time ) ? ' data-interval="' . $time . '"' : '';
+		$auto      = ( 'false' !== $auto ) ? ' data-bs-ride="carousel"' : '';
+		$time      = ( $time ) ? ' data-bs-interval="' . $time . '"' : '';
 		$animation = ( $animation ) ? ' carousel-' . $animation : '';
 		?>
 
@@ -187,14 +187,14 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 
 			<?php if ( 'false' !== $indicators ) { ?>
 
-				<ol class="carousel-indicators">
+				<div class="carousel-indicators">
 					<?php
 					foreach ( $carousel as $index => $indicator ) {
 						$active = ( 0 === $index ) ? 'active' : '';
 						?>
-						<li data-target="#<?php echo esc_html( $uniq_id ); ?>" data-slide-to="<?php echo esc_attr( $index ); ?>" class="<?php echo esc_attr( $active ); ?>"></li>
+						<button type="button" data-bs-target="#<?php echo esc_html( $uniq_id ); ?>" data-bs-slide-to="<?php echo esc_attr( $index ); ?>" class="<?php echo esc_attr( $active ); ?>"></button>
 					<?php } ?>
-				</ol>
+				</div>
 
 			<?php } ?>
 
@@ -249,14 +249,14 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 
 			<?php if ( 'false' !== $control ) { ?>
 
-				<a class="carousel-control-prev" href="#<?php echo esc_html( $uniq_id ); ?>" role="button" data-slide="prev">
+				<button type="button" class="carousel-control-prev" data-bs-target="#<?php echo esc_html( $uniq_id ); ?>" data-bs-slide="prev">
 					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-					<span class="sr-only">Previous</span>
-				</a>
-				<a class="carousel-control-next" href="#<?php echo esc_html( $uniq_id ); ?>" role="button" data-slide="next">
+					<span class="visually-hidden">Previous</span>
+				</button>
+				<button type="button" class="carousel-control-next" data-bs-target="#<?php echo esc_html( $uniq_id ); ?>" data-bs-slide="next">
 					<span class="carousel-control-next-icon" aria-hidden="true"></span>
-					<span class="sr-only">Next</span>
-				</a>
+					<span class="visually-hidden">Next</span>
+				</button>
 
 			<?php } ?>
 
