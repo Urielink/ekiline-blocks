@@ -33,17 +33,17 @@ import save from './save';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-registerBlockType( 'ekiline-blocks/ekiline-tabs', {
-	/**
-	 * @see ./edit.js
-	 */
-	edit: Edit,
+// registerBlockType( 'ekiline-blocks/ekiline-tabs', {
+// 	/**
+// 	 * @see ./edit.js
+// 	 */
+// 	edit: Edit,
 
-	/**
-	 * @see ./save.js
-	 */
-	save,
-} );
+// 	/**
+// 	 * @see ./save.js
+// 	 */
+// 	save,
+// } );
 
 /**
  * Bloques necesarios para tabs.

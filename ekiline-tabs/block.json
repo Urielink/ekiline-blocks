@@ -5,7 +5,7 @@
 	"title": "Ekiline Carousel",
 	"category": "design",
 	"icon": "block-default",
-	"description": "Aqui va la descripcion del plugin",
+	"description": "Aqui va la descripcion del plugin (tabs)",
 	"supports": {
 		"html": false
 	},
