@@ -1,0 +1,16 @@
+{
+	"apiVersion": 2,
+	"name": "ekiline-blocks/ekiline-tabs",
+	"version": "0.1.0",
+	"title": "Ekiline Carousel",
+	"category": "design",
+	"icon": "block-default",
+	"description": "Aqui va la descripcion del plugin",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "ekiline-tabs",
+	"editorScript": "file:./build/index.js",
+	"editorStyle": "file:./build/index.css",
+	"style": "file:./build/style-index.css"
+}
