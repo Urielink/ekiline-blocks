@@ -24,45 +24,33 @@ import './style.scss';
 
 /**
  * Internal dependencies
+ * - Reemplazadas, necesidad de anidar mas bloques.
  */
-import Edit from './edit';
-import save from './save';
+// import Edit from './edit';
+// import save from './save';
 
 /**
  * Every block starts by registering a new block type definition.
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
- */
-registerBlockType( 'ekiline-blocks/ekiline-tabs', {
-	/**
-	 * @see ./edit.js
-	 */
-	edit: Edit,
-
-	/**
-	 * @see ./save.js
-	 */
-	save,
-} );
-
-/**
+ *
  * Bloques necesarios para tabs.
- * tabs-wrapper
- * - tabs-navbar
- * - - tab-link
- * - tabs-container
- * - - tab-content
- * Docs: 
- * Anidado.
+ * .tabs-wrapper
+ * - .tabs-navbar
+ * - - .tab-link
+ * - .tabs-container
+ * - - .tab-content
+ *
+ * Referencias para anidado.
  * @ref https://developer.wordpress.org/block-editor/how-to-guides/block-tutorial/nested-blocks-inner-blocks/
+ *
  * No mostrar en inspector.
  * @ref https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/
  */
- registerBlockType( 'ekiline-blocks/ekiline-tabs-wrapper', {
-    title: __( 'Bloque con tabs', 'ekiline-tabs' ),
-	// parent: ['ekiline-blocks/ekiline-tabs'],
+ registerBlockType( 'ekiline-blocks/ekiline-tabs', {
+    title: __( 'Ekiline Tabs', 'ekiline-tabs' ),
     icon: 'table-row-after',
-	description: __( 'Envoltorio tabs.', 'ekiline-tabs' ),
+	description: __( 'Add a tabs for your posts, full control.', 'ekiline-tabs' ),
 	category: 'design',
 	supports: {
 		inserter: true,
@@ -74,6 +62,10 @@ registerBlockType( 'ekiline-blocks/ekiline-tabs', {
 		},
 	},
 
+	/**
+	 * @see ./edit.js
+	 */
+	// edit: Edit,
     edit: () => {
 
 		// Restringir los bloques, Cargar un preset.
@@ -95,6 +87,11 @@ registerBlockType( 'ekiline-blocks/ekiline-tabs', {
             </div>
         );
     },
+
+	/**
+	 * @see ./save.js
+	 */
+	// save,
     save: () => {
 
 		// personalizar clase
@@ -115,10 +112,10 @@ registerBlockType( 'ekiline-blocks/ekiline-tabs', {
  */
 
 registerBlockType( 'ekiline-blocks/ekiline-tabs-navbar', {
-    title: __( 'Navegador de tabs', 'ekiline-tabs' ),
-	parent: ['ekiline-blocks/ekiline-tabs-wrapper'],
+    title: __( 'Tabs Nav Bar', 'ekiline-tabs' ),
+	parent: ['ekiline-blocks/ekiline-tabs'],
     icon: 'editor-kitchensink',
-	description: __( 'Navegacion tabs.', 'ekiline-tabs' ),
+	description: __( 'Tab navigation, add your links.', 'ekiline-tabs' ),
 	category: 'design',
 	supports: {
 		html: false,
@@ -145,7 +142,10 @@ registerBlockType( 'ekiline-blocks/ekiline-tabs-navbar', {
 
 		// Restringir los bloques, Cargar un preset.
 		const PARENT_ALLOWED_BLOCKS = [ 'ekiline-blocks/ekiline-tab-link' ];
-		const CHILD_TEMPLATE = [ [ 'ekiline-blocks/ekiline-tab-link' ], [ 'ekiline-blocks/ekiline-tab-link' ], ];
+		const CHILD_TEMPLATE = [ 
+			[ 'ekiline-blocks/ekiline-tab-link', { content: __( 'Tab link 1', 'ekiline-tabs' ) } ], 
+			[ 'ekiline-blocks/ekiline-tab-link', { content: __( 'Tab link 2', 'ekiline-tabs' ) } ], 
+		];
 
 		const blockProps = useBlockProps( {
 			className: 'tabs-navbar',
@@ -179,10 +179,10 @@ registerBlockType( 'ekiline-blocks/ekiline-tabs-navbar', {
  */
 import { RichText } from '@wordpress/block-editor';
 registerBlockType( 'ekiline-blocks/ekiline-tab-link', {
-    title: __( 'link de tabs', 'ekiline-tabs' ),
+    title: __( 'Tab Link', 'ekiline-tabs' ),
 	parent: ['ekiline-blocks/ekiline-tabs-navbar'],
     icon: 'button',
-	description: __( 'Boton navegacion tabs.', 'ekiline-tabs' ),
+	description: __( 'Tab button link. Copy Anchor text and paste on Tab Content Anchor field.', 'ekiline-tabs' ),
 	category: 'design',
 	supports: {
 		html: false,
@@ -258,10 +258,10 @@ registerBlockType( 'ekiline-blocks/ekiline-tab-link', {
  */
 
  registerBlockType( 'ekiline-blocks/ekiline-tabs-container', {
-    title: __( 'Contenedor de tabs', 'ekiline-tabs' ),
-	parent: ['ekiline-blocks/ekiline-tabs-wrapper'],
+    title: __( 'Tabs container', 'ekiline-tabs' ),
+	parent: ['ekiline-blocks/ekiline-tabs'],
     icon: 'editor-kitchensink',
-	description: __( 'Aqui se acumulan las tabs.', 'ekiline-tabs' ),
+	description: __( 'All tabs add here.', 'ekiline-tabs' ),
 	category: 'design',
 	supports: {
 		html: false,
@@ -308,10 +308,10 @@ registerBlockType( 'ekiline-blocks/ekiline-tab-link', {
  */
 
  registerBlockType( 'ekiline-blocks/ekiline-tab-content', {
-    title: 'Tab o ficha',
+    title: __( 'Tab Content', 'ekiline-tabs' ),
 	parent: ['ekiline-blocks/ekiline-tabs-container'],
     icon: 'feedback',
-	description:__( 'Segmento de contenido.', 'ekiline-tabs' ),
+	description:__( 'Inner tab content. Find Tab Link anchor text, and paste on Anchor field.', 'ekiline-tabs' ),
 	category: 'design',
 	supports: {
 		anchor: true,
@@ -323,7 +323,7 @@ registerBlockType( 'ekiline-blocks/ekiline-tab-link', {
     edit: () => {
 		// Cargar un preset.
 		const CHILD_TEMPLATE = [
-			[ 'core/paragraph', { placeholder: __( 'Ingresa contenido o cualquier bloque', 'ekiline-tabs' ) } ],
+			[ 'core/paragraph', { content: __( 'Add your content and blocks', 'ekiline-tabs' ) } ],
 		];
 
 		// personalizar clase

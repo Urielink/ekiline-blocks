@@ -48,7 +48,7 @@ registerBlockType( 'ekiline-blocks/ekiline-carousel', {
 	 * This is a short description for your block, can be translated with `i18n` functions.
 	 * It will be shown in the Block Tab in the Settings Sidebar.
 	 */
-	description: __( 'Plugin for Ekiline theme, add a carousel to your posts, choose between posts or images, colmuns and more.', 'ekiline-carousel' ),
+	description: __( 'Add a carousel to your posts, choose between posts or images, colmuns and more.', 'ekiline-carousel' ),
 
 	/**
 	 * Blocks are grouped into categories to help users browse and discover them.
