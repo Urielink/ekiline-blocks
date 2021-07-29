@@ -5,12 +5,13 @@
  * Replace them with your own styles or remove the file completely.
  */
  
-.wp-block-ekiline-blocks-ekiline-tabs.tabs-wrapper.wp-block {
+.wp-block-ekiline-blocks-ekiline-tabs.tabs-wrapper.wp-block,
+tabs-wrapper.wp-block {
 	padding: 10px;
 	margin-top: initial;
 }
 
-.tabs-wrapper .wp-block {
+.tabs-wrapper.wp-block, .tabs-wrapper .wp-block {
 	max-width: 100% !important;
 	margin-top: 0px !important;
 	margin-bottom: 5px !important;
