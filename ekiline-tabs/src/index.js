@@ -176,8 +176,11 @@ registerBlockType( 'ekiline-blocks/ekiline-tabs-navbar', {
 
 /**
  * - - tab-link
+ * p1) Requiere RichText
+ * p2) Requiere Registrar un nuevo formato para insertar un boton.
  */
 import { RichText } from '@wordpress/block-editor';
+
 registerBlockType( 'ekiline-blocks/ekiline-tab-link', {
     title: __( 'Tab Link', 'ekiline-tabs' ),
 	parent: ['ekiline-blocks/ekiline-tabs-navbar'],
@@ -211,7 +214,7 @@ registerBlockType( 'ekiline-blocks/ekiline-tab-link', {
         return (
             <RichText
 				withoutInteractiveFormatting={ true }
-				allowedFormats={ ['core/bold', 'core/italic', 'core/image', 'core/align'] }
+				allowedFormats={ ['core/bold', 'core/italic', 'core/image', 'core/align', 'ekiline-format/find-anchor' ] } //un formato nuevo para TAB.
                 tagName="p" // The tag here is the element output and editable in the admin
                 className={ blockProps.className }
                 value={ attributes.content } // Any existing content, either from the database or an attribute default
@@ -252,6 +255,67 @@ registerBlockType( 'ekiline-blocks/ekiline-tab-link', {
 
     },
 } );
+
+/**
+ * P2) Boton auxiliar:
+ * Declaro un estilo y lo ocupo como control para acceder a una funcion.
+ * @ref https://developer.wordpress.org/block-editor/how-to-guides/format-api/
+ * @ref https://developer.wordpress.org/block-editor/how-to-guides/block-tutorial/introducing-attributes-and-editable-fields/
+ * @ref https://developer.wordpress.org/block-editor/how-to-guides/format-api/3-apply-format/
+ */
+import { compose, ifCondition } from '@wordpress/compose';
+import { registerFormatType } from '@wordpress/rich-text';
+import { RichTextToolbarButton } from '@wordpress/block-editor';
+import { withSelect } from '@wordpress/data';
+
+// Boton.
+const findAnchorButton = ( props ) => {
+    return (
+        <RichTextToolbarButton
+            icon="code-standards"
+            title="Find anchor"
+            onClick={ () => {
+                // console.log( props.value.text );
+				// limpiar tambien caracteres especiales. anchor + replace/lowercase.
+				const replaceSpecialChars = (str) => {
+					return str.normalize('NFD').replace(/(<([^>]+)>)/gi, "") // Eliminar HTML
+						.replace(/[\u0300-\u036f]/g, '') // Remove accents
+						.replace(/([^\w]+|\s+)/g, '-') // Replace space and other characters by hyphen
+						.replace(/\-\-+/g, '-')	// Replaces multiple hyphens by one hyphen
+						.replace(/(^-+|-+$)/, '') // Remove extra hyphens from beginning or end of the string
+						.toLowerCase(); // convierte a minusculas
+				}
+				const linkToTab = replaceSpecialChars( props.value.text );
+
+				alert( __( 'Tab-Content Anchor: ' + linkToTab , 'ekiline-tabs' ) )
+            } }
+        />
+    );
+};
+
+// Condicion.
+const ConditionalButton = compose(
+    withSelect( function ( select ) {
+        return {
+            selectedBlock: select( 'core/block-editor' ).getSelectedBlock(),
+        };
+    } ),
+    ifCondition( function ( props ) {
+        return (
+            // props.selectedBlock && props.selectedBlock.name === 'core/paragraph'
+            props.selectedBlock && props.selectedBlock.name === 'ekiline-blocks/ekiline-tab-link'
+        );
+    } )
+)( findAnchorButton );
+
+// Formato a registrar.
+registerFormatType( 'ekiline-format/find-anchor', {
+    title: 'Find anchor',
+    tagName: 'findanchor',
+    className: null,
+    edit: ConditionalButton,
+} );
+
 
 /**
  * - tabs-container
