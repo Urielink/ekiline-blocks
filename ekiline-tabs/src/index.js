@@ -33,17 +33,17 @@ import save from './save';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-// registerBlockType( 'ekiline-blocks/ekiline-tabs', {
-// 	/**
-// 	 * @see ./edit.js
-// 	 */
-// 	edit: Edit,
+registerBlockType( 'ekiline-blocks/ekiline-tabs', {
+	/**
+	 * @see ./edit.js
+	 */
+	edit: Edit,
 
-// 	/**
-// 	 * @see ./save.js
-// 	 */
-// 	save,
-// } );
+	/**
+	 * @see ./save.js
+	 */
+	save,
+} );
 
 /**
  * Bloques necesarios para tabs.
@@ -230,7 +230,8 @@ registerBlockType( 'ekiline-blocks/ekiline-tab-link', {
 		// limpiar tambien caracteres especiales. anchor + replace/lowercase.
 		// https://ricardometring.com/javascript-replace-special-characters
 		const replaceSpecialChars = (str) => {
-			return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+			return str.normalize('NFD').replace(/(<([^>]+)>)/gi, "") // Eliminar HTML
+				.replace(/[\u0300-\u036f]/g, '') // Remove accents
 				.replace(/([^\w]+|\s+)/g, '-') // Replace space and other characters by hyphen
 				.replace(/\-\-+/g, '-')	// Replaces multiple hyphens by one hyphen
 				.replace(/(^-+|-+$)/, '') // Remove extra hyphens from beginning or end of the string

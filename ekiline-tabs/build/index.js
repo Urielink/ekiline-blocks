@@ -299,17 +299,18 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
-// registerBlockType( 'ekiline-blocks/ekiline-tabs', {
-// 	/**
-// 	 * @see ./edit.js
-// 	 */
-// 	edit: Edit,
-// 	/**
-// 	 * @see ./save.js
-// 	 */
-// 	save,
-// } );
 
+Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["registerBlockType"])('ekiline-blocks/ekiline-tabs', {
+  /**
+   * @see ./edit.js
+   */
+  edit: _edit__WEBPACK_IMPORTED_MODULE_5__["default"],
+
+  /**
+   * @see ./save.js
+   */
+  save: _save__WEBPACK_IMPORTED_MODULE_6__["default"]
+});
 /**
  * Bloques necesarios para tabs.
  * tabs-wrapper
@@ -470,7 +471,8 @@ Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["registerBlockType"])('eki
     // https://ricardometring.com/javascript-replace-special-characters
 
     const replaceSpecialChars = str => {
-      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+      return str.normalize('NFD').replace(/(<([^>]+)>)/gi, "") // Eliminar HTML
+      .replace(/[\u0300-\u036f]/g, '') // Remove accents
       .replace(/([^\w]+|\s+)/g, '-') // Replace space and other characters by hyphen
       .replace(/\-\-+/g, '-') // Replaces multiple hyphens by one hyphen
       .replace(/(^-+|-+$)/, '') // Remove extra hyphens from beginning or end of the string

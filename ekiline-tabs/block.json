@@ -2,7 +2,7 @@
 	"apiVersion": 2,
 	"name": "ekiline-blocks/ekiline-tabs",
 	"version": "0.1.0",
-	"title": "Ekiline Carousel",
+	"title": "Ekiline Tabs",
 	"category": "design",
 	"icon": "block-default",
 	"description": "Aqui va la descripcion del plugin (tabs)",
