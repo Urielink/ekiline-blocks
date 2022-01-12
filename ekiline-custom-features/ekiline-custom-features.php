@@ -144,3 +144,55 @@ function ekiline_sitemap_css( $css ) {
 }
 
 add_filter( 'wp_sitemaps_stylesheet_css', 'ekiline_sitemap_css', 0, 1 );
+
+/**
+ * Shortcodes, compartir para redes sociales.
+ * 1. Habilitar protocolos auxiliares, por ejemplo: whatsapp.
+ * 2. Establecer valores predeterminados, los bloques no facilitan el uso de shortcodes anidados.
+ * 3. Crear un shortcode por cada item.
+ */
+add_filter( 'kses_allowed_protocols', function( $protocols ) {
+	$protocols[] = 'whatsapp';
+	return $protocols;
+});
+
+function ekiline_share_network_url($network){
+	// Obtener URL.
+	global $wp;
+	$wp_url = home_url( add_query_arg(array(),$wp->request) );
+	$link = '';
+	switch ( $network ) {
+		case 'facebook':
+			$link = 'facebook.com/sharer.php?u=';
+			break;
+		case 'twitter':
+			$link = 'twitter.com/share?url=';
+			break;
+		case 'googleplus':
+			$link = 'plus.google.com/share?url=';
+			break;
+		case 'linkedin':
+			$link = 'linkedin.com/shareArticle?url=';
+			break;
+		case 'whatsapp':
+			$link = 'whatsapp://send?text=';
+			break;
+	}
+	return $link . $wp_url;
+}
+
+add_shortcode( 'ekiline_share_facebook', function() {
+	return ekiline_share_network_url('facebook');
+});
+add_shortcode( 'ekiline_share_twitter', function() {
+	return ekiline_share_network_url('twitter');
+});
+add_shortcode( 'ekiline_share_linkedin', function() {
+	return ekiline_share_network_url('linkedin');
+});
+add_shortcode( 'ekiline_share_googleplus', function() {
+	return ekiline_share_network_url('googleplus');
+});
+add_shortcode( 'ekiline_share_whatsapp', function() {
+	return ekiline_share_network_url('whatsapp');
+});
