@@ -235,7 +235,7 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 								<?php } ?>
 
 								<?php if ( isset( $slide['excerpt'] ) && $slide['excerpt'] ) { ?>
-									<p><?php echo esc_html( $slide['excerpt'] ); ?></p>
+									<p><?php echo wp_kses_post( $slide['excerpt'] ); ?></p>
 								<?php } ?>
 
 							</div>
