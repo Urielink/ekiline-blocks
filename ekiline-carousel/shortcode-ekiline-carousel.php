@@ -141,7 +141,8 @@ function ekiline_carousel_posts( $ppp = 3, $cat = array(), $findblock = null, $o
  * En caso de no obtener informacion.
  *
  * @link ref: https://developer.wordpress.org/reference/functions/wp_get_attachment_image/
- * @link ref:  https://developer.wordpress.org/reference/functions/wp_get_attachment_image_src/
+ * @link ref: https://developer.wordpress.org/reference/functions/wp_get_attachment_image_src/
+ * @link ref: https://developer.wordpress.org/reference/functions/get_post_mime_type/
  *
  * @param array $ids image ids.
  * @return array images data.
@@ -154,7 +155,10 @@ function ekiline_carousel_images( $ids = array() ) {
 	foreach ( $ids as $index => $image ) {
 		$info            = array();
 		$info['title']   = get_the_title( $image );
-		$info['image']   = wp_get_attachment_image_src( $image, 'full', true )[0];
+		// 05-03-22: adicion de videos en el carrusel.
+		// $info['image']   = wp_get_attachment_image_src( $image, 'full', true )[0]; // seleccion especifica url de imagen.
+		$info['image']   = wp_get_attachment_url( $image ); // seleccion general de url de attachment.
+		$info['mimetype']= get_post_mime_type($image); // conocer tipo de archivo llamado.
 		$info['alt']     = get_post_meta( $image, '_wp_attachment_image_alt', true );
 		$info['excerpt'] = get_post( $image )->post_excerpt; // Caption.
 		$info['content'] = get_post( $image )->post_content; // Description.
@@ -165,6 +169,8 @@ function ekiline_carousel_images( $ids = array() ) {
 
 /**
  * Marcado para el carrusel.
+ * 
+ * @link https://www.php.net/manual/en/function.str-contains.php
  *
  * @param array  $carousel recibe los datos de loop previos.
  * @param string $columns obtiene la clase css que extiende la vista del carrusel.
@@ -213,8 +219,13 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 
 						<?php } else { ?>
 
-							<?php if ( isset( $slide['image'] ) ) { ?>
+							<?php // 05-03-22: adicion de videos en el carrusel. ?>
+							<?php if ( isset( $slide['image'] ) && str_contains( $slide['mimetype'], 'image') ) { ?>
 								<img class="img-fluid" src="<?php echo esc_url( $slide['image'] ); ?>" alt="<?php echo esc_html( $slide['alt'] ); ?>" title="<?php echo esc_html( $slide['title'] ); ?>" loading="lazy">
+							<?php } ?>
+
+							<?php if ( isset( $slide['image'] ) && str_contains( $slide['mimetype'], 'video') ) { ?>
+								<video class="wp-block-cover__video-background intrinsic-ignore" autoplay="" muted="" loop="" playsinline="" src="<?php echo esc_url( $slide['image'] ); ?>" data-object-fit="cover"></video>
 							<?php } ?>
 
 							<div class="carousel-caption text-dark">

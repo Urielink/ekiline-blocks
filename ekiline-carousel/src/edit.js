@@ -104,7 +104,7 @@ export default function Edit(props) {
 						value={ attributes.ChooseType }
 						options={ [
 							{ label: __( 'Posts', 'ekiline-carousel' ), value: 'posts' },
-							{ label: __( 'Images', 'ekiline-carousel' ), value: 'images' },
+							{ label: __( 'Images / Video', 'ekiline-carousel' ), value: 'images' },
 						] }
 						onChange={ ( ChooseType ) =>
 							setAttributes( { ChooseType } )
@@ -130,7 +130,8 @@ export default function Edit(props) {
 									}
 									setAttributes( { SetIds: img_ids } );
 								} }
-								allowedTypes={ [ 'image' ] }
+								// ref: https://github.com/WordPress/gutenberg/blob/HEAD/packages/block-editor/src/components/media-upload/README.md.
+								allowedTypes={ [ 'image', 'video' ] }
 								multiple={ true }
 								value={ attributes.SetIds }
 								render={ ( { open } ) => (
