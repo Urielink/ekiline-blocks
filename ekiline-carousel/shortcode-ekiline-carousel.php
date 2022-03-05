@@ -219,13 +219,15 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 
 						<?php } else { ?>
 
-							<?php // 05-03-22: adicion de videos en el carrusel. ?>
-							<?php if ( isset( $slide['image'] ) && str_contains( $slide['mimetype'], 'image') ) { ?>
-								<img class="img-fluid" src="<?php echo esc_url( $slide['image'] ); ?>" alt="<?php echo esc_html( $slide['alt'] ); ?>" title="<?php echo esc_html( $slide['title'] ); ?>" loading="lazy">
-							<?php } ?>
+							<?php if ( isset( $slide['image'] ) ) { ?>
 
-							<?php if ( isset( $slide['image'] ) && str_contains( $slide['mimetype'], 'video') ) { ?>
-								<video class="wp-block-cover__video-background intrinsic-ignore" autoplay="" muted="" loop="" playsinline="" src="<?php echo esc_url( $slide['image'] ); ?>" data-object-fit="cover"></video>
+								<?php // 05-03-22: adicion de videos en el carrusel. ?>
+								<?php if ( isset( $slide['mimetype'] ) && str_contains( $slide['mimetype'], 'video') ) { ?>
+									<video class="wp-block-cover__video-background intrinsic-ignore" autoplay="" muted="" loop="" playsinline="" src="<?php echo esc_url( $slide['image'] ); ?>" data-object-fit="cover"></video>
+								<?php } else { ?>
+									<img class="img-fluid" src="<?php echo esc_url( $slide['image'] ); ?>" alt="<?php echo esc_html( $slide['alt'] ); ?>" title="<?php echo esc_html( $slide['title'] ); ?>" loading="lazy">
+								<?php } ?>
+
 							<?php } ?>
 
 							<div class="carousel-caption text-dark">
