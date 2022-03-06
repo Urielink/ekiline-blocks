@@ -41,7 +41,8 @@ function ekiline_shortcode_carousel( $atts = [] ) {
 			'indicators' => null, // Show carousel indicators.
 			'auto'       => null, // Show carousel indicators.
 			'time'       => null, // Set time interval between slides.
-			'animation'  => null, // Set time interval between slides.
+			'animation'  => null, // Set time animation.
+			'height'     => null, // Set min-height of carousel.
 		),
 		$atts,
 		'ekiline-carousel'
@@ -59,7 +60,7 @@ function ekiline_shortcode_carousel( $atts = [] ) {
 	$columns = ( in_array( $atts['columns'], [ '2', '3', '4', '6' ], true ) ) ? ' carousel-multiple x' . $atts['columns'] : '';
 	// Obtener HTML y combinar con funciones previas.
 	ob_start();
-	ekiline_carousel_html( $carousel, $columns, $atts['control'], $atts['indicators'], $atts['auto'], $atts['time'], $atts['animation'] );
+	ekiline_carousel_html( $carousel, $columns, $atts['control'], $atts['indicators'], $atts['auto'], $atts['time'], $atts['animation'], $atts['height'] );
 	return ob_get_clean();
 }
 // phpcs:ignore WPThemeReview.PluginTerritory.ForbiddenFunctions.plugin_territory_add_shortcode
@@ -180,16 +181,17 @@ function ekiline_carousel_images( $ids = array() ) {
  * @param string $time opcion, milisegundos para las transiciones del carrusel = 5000.
  * @param string $animation opcion, = fade, vertical.
  */
-function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $auto, $time, $animation ) {
+function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $auto, $time, $animation, $height ) {
 
 	if ( $carousel ) {
 		$uniq_id   = 'carousel_module_' . wp_rand( 1, 99 );
 		$auto      = ( 'false' !== $auto ) ? ' data-bs-ride="carousel"' : '';
 		$time      = ( $time ) ? ' data-bs-interval="' . $time . '"' : '';
 		$animation = ( $animation ) ? ' carousel-' . $animation : '';
+		$height    = ( $height ) ? ' style="min-height:' . $height . 'px;"' : '';
 		?>
 
-		<div id="<?php echo esc_attr( $uniq_id ); ?>" class="carousel slide<?php echo esc_attr( $columns . $animation ); ?>"<?php echo wp_kses_post( $auto . $time ); ?>>
+		<div id="<?php echo esc_attr( $uniq_id ); ?>" class="carousel slide<?php echo esc_attr( $columns . $animation ); ?>"<?php echo wp_kses_post( $auto . $time . $height ); ?>>
 
 			<?php if ( 'false' !== $indicators ) { ?>
 
@@ -207,11 +209,11 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 			<div class="carousel-inner">
 				<?php
 				foreach ( $carousel as $index => $slide ) {
-					$active = ( isset( $slide['image'] ) ) ? '' : 'no-thumb';
-					$active .= ( 0 === $index ) ? ' active' : '';
+					$active  = ( 0 === $index ) ? ' active' : '';
+					$cap_img = ( !isset( $slide['image'] ) ) ? ' no-image' : '';
 					?>
 
-					<div class="carousel-item <?php echo esc_attr( $active ); ?>">
+					<div class="carousel-item<?php echo esc_attr( $active ); ?>"<?php echo wp_kses_post( $height ); ?>>
 
 						<?php if ( isset( $slide['block'] ) ) { ?>
 
@@ -230,7 +232,7 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 
 							<?php } ?>
 
-							<div class="carousel-caption text-dark">
+							<div class="carousel-caption text-dark<?php echo esc_attr( $cap_img ); ?>">
 
 								<?php if ( isset( $slide['title'] ) && $slide['title'] ) { ?>
 									<h3>

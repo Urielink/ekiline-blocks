@@ -258,6 +258,15 @@ export default function Edit(props) {
 							setAttributes( { SetAnimation } )
 						}
 					/>
+
+					<TextControl
+						label={ __( 'Height (px).', 'ekiline-carousel' ) }
+						type="number"
+						value={ attributes.SetHeight }
+						onChange={ ( newval ) =>
+							setAttributes( { SetHeight: parseInt( newval ) } )
+						}
+					/>
 				</PanelBody>
 			</InspectorControls>
 

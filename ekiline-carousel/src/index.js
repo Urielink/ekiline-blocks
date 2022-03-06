@@ -127,6 +127,10 @@ registerBlockType( 'ekiline-blocks/ekiline-carousel', {
 			type: 'string',
 			default: '',
 		},
+		SetHeight: {
+			type: 'number',
+			default: '480',
+		},
 	},
 
 	/**
