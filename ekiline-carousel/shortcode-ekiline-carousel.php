@@ -170,7 +170,7 @@ function ekiline_carousel_images( $ids = array() ) {
 
 /**
  * Marcado para el carrusel.
- * 
+ *
  * @link https://www.php.net/manual/en/function.str-contains.php
  *
  * @param array  $carousel recibe los datos de loop previos.
@@ -188,7 +188,13 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 		$auto      = ( 'false' !== $auto ) ? ' data-bs-ride="carousel"' : '';
 		$time      = ( $time ) ? ' data-bs-interval="' . $time . '"' : '';
 		$animation = ( $animation ) ? ' carousel-' . $animation : '';
-		$height    = ( $height ) ? ' style="min-height:' . $height . 'px;"' : '';
+		if( null === $height ){
+			$height = ' style="min-height:480px;"';
+		} elseif ( '0' === $height ){
+			$height = ' style="min-height:100vh;"';
+		} else {
+			$height = ' style="min-height:' . $height . 'px;"';
+		}
 		?>
 
 		<div id="<?php echo esc_attr( $uniq_id ); ?>" class="carousel slide<?php echo esc_attr( $columns . $animation ); ?>"<?php echo wp_kses_post( $auto . $time . $height ); ?>>
@@ -225,14 +231,14 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 
 								<?php // 05-03-22: adicion de videos en el carrusel. ?>
 								<?php if ( isset( $slide['mimetype'] ) && str_contains( $slide['mimetype'], 'video') ) { ?>
-									<video class="wp-block-cover__video-background intrinsic-ignore" autoplay="" muted="" loop="" playsinline="" src="<?php echo esc_url( $slide['image'] ); ?>" data-object-fit="cover"></video>
+									<video class="carousel-media wp-block-cover__video-background intrinsic-ignore" autoplay="" muted="" loop="" playsinline="" controls="" src="<?php echo esc_url( $slide['image'] ); ?>" data-object-fit="cover"></video>
 								<?php } else { ?>
-									<img class="img-fluid" src="<?php echo esc_url( $slide['image'] ); ?>" alt="<?php echo esc_html( $slide['alt'] ); ?>" title="<?php echo esc_html( $slide['title'] ); ?>" loading="lazy">
+									<img class="carousel-media img-fluid" src="<?php echo esc_url( $slide['image'] ); ?>" alt="<?php echo esc_html( $slide['alt'] ); ?>" title="<?php echo esc_html( $slide['title'] ); ?>" loading="lazy">
 								<?php } ?>
 
 							<?php } ?>
 
-							<div class="carousel-caption text-dark<?php echo esc_attr( $cap_img ); ?>">
+							<div class="carousel-caption <?php echo esc_attr( $cap_img ); ?>">
 
 								<?php if ( isset( $slide['title'] ) && $slide['title'] ) { ?>
 									<h3>

@@ -260,7 +260,7 @@ export default function Edit(props) {
 					/>
 
 					<TextControl
-						label={ __( 'Height (px).', 'ekiline-carousel' ) }
+						label={ __( 'Height in pixels, set zero to see full display height.', 'ekiline-carousel' ) }
 						type="number"
 						value={ attributes.SetHeight }
 						onChange={ ( newval ) =>
