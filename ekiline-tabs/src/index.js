@@ -128,8 +128,8 @@ registerBlockType( 'ekiline-blocks/ekiline-tabs-navbar', {
 	// 	{
 	// 		name: 'nav-pills',
 	// 		label: __( 'Pills' ),
-	// 		isDefault: true,
 	// 		className: 'nav-pills',
+	// 		isDefault: true,
 	// 	},
 	// 	{
 	// 		name: 'nav-tabs',
