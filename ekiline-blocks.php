@@ -66,6 +66,15 @@ require plugin_dir_path( __FILE__ ) . '/ekiline-modal/ekiline-modal.php';
 require plugin_dir_path( __FILE__ ) . '/ekiline-accordion/ekiline-accordion.php';
 require plugin_dir_path( __FILE__ ) . '/ekiline-collapse/ekiline-collapse.php';
 
+/**
+ * Bloque Popovers
+ **/
+require plugin_dir_path( __FILE__ ) . '/ekiline-popovers/ekiline-popovers.php';
+/**
+ * Bloque Progress
+ **/
+require plugin_dir_path( __FILE__ ) . '/ekiline-progress/ekiline-progress.php';
+
 
 /**
  * Personalizaciones
