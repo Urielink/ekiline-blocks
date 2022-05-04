@@ -41,7 +41,8 @@ function ekiline_shortcode_carousel( $atts = [] ) {
 			'indicators' => null, // Show carousel indicators.
 			'auto'       => null, // Show carousel indicators.
 			'time'       => null, // Set time interval between slides.
-			'animation'  => null, // Set time interval between slides.
+			'animation'  => null, // Set time animation.
+			'height'     => null, // Set min-height of carousel.
 		),
 		$atts,
 		'ekiline-carousel'
@@ -59,7 +60,7 @@ function ekiline_shortcode_carousel( $atts = [] ) {
 	$columns = ( in_array( $atts['columns'], [ '2', '3', '4', '6' ], true ) ) ? ' carousel-multiple x' . $atts['columns'] : '';
 	// Obtener HTML y combinar con funciones previas.
 	ob_start();
-	ekiline_carousel_html( $carousel, $columns, $atts['control'], $atts['indicators'], $atts['auto'], $atts['time'], $atts['animation'] );
+	ekiline_carousel_html( $carousel, $columns, $atts['control'], $atts['indicators'], $atts['auto'], $atts['time'], $atts['animation'], $atts['height'] );
 	return ob_get_clean();
 }
 // phpcs:ignore WPThemeReview.PluginTerritory.ForbiddenFunctions.plugin_territory_add_shortcode
@@ -141,7 +142,8 @@ function ekiline_carousel_posts( $ppp = 3, $cat = array(), $findblock = null, $o
  * En caso de no obtener informacion.
  *
  * @link ref: https://developer.wordpress.org/reference/functions/wp_get_attachment_image/
- * @link ref:  https://developer.wordpress.org/reference/functions/wp_get_attachment_image_src/
+ * @link ref: https://developer.wordpress.org/reference/functions/wp_get_attachment_image_src/
+ * @link ref: https://developer.wordpress.org/reference/functions/get_post_mime_type/
  *
  * @param array $ids image ids.
  * @return array images data.
@@ -154,7 +156,10 @@ function ekiline_carousel_images( $ids = array() ) {
 	foreach ( $ids as $index => $image ) {
 		$info            = array();
 		$info['title']   = get_the_title( $image );
-		$info['image']   = wp_get_attachment_image_src( $image, 'full', true )[0];
+		// 05-03-22: adicion de videos en el carrusel.
+		// $info['image']   = wp_get_attachment_image_src( $image, 'full', true )[0]; // seleccion especifica url de imagen.
+		$info['image']   = wp_get_attachment_url( $image ); // seleccion general de url de attachment.
+		$info['mimetype']= get_post_mime_type($image); // conocer tipo de archivo llamado.
 		$info['alt']     = get_post_meta( $image, '_wp_attachment_image_alt', true );
 		$info['excerpt'] = get_post( $image )->post_excerpt; // Caption.
 		$info['content'] = get_post( $image )->post_content; // Description.
@@ -166,6 +171,8 @@ function ekiline_carousel_images( $ids = array() ) {
 /**
  * Marcado para el carrusel.
  *
+ * @link https://www.php.net/manual/en/function.str-contains.php
+ *
  * @param array  $carousel recibe los datos de loop previos.
  * @param string $columns obtiene la clase css que extiende la vista del carrusel.
  * @param string $control opcion, ocultar controles = false.
@@ -174,16 +181,23 @@ function ekiline_carousel_images( $ids = array() ) {
  * @param string $time opcion, milisegundos para las transiciones del carrusel = 5000.
  * @param string $animation opcion, = fade, vertical.
  */
-function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $auto, $time, $animation ) {
+function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $auto, $time, $animation, $height ) {
 
 	if ( $carousel ) {
 		$uniq_id   = 'carousel_module_' . wp_rand( 1, 99 );
 		$auto      = ( 'false' !== $auto ) ? ' data-bs-ride="carousel"' : '';
 		$time      = ( $time ) ? ' data-bs-interval="' . $time . '"' : '';
 		$animation = ( $animation ) ? ' carousel-' . $animation : '';
+		if( null === $height ){
+			$height = ' style="min-height:480px;"';
+		} elseif ( '0' === $height ){
+			$height = ' style="min-height:100vh;"';
+		} else {
+			$height = ' style="min-height:' . $height . 'px;"';
+		}
 		?>
 
-		<div id="<?php echo esc_attr( $uniq_id ); ?>" class="carousel slide<?php echo esc_attr( $columns . $animation ); ?>"<?php echo wp_kses_post( $auto . $time ); ?>>
+		<div id="<?php echo esc_attr( $uniq_id ); ?>" class="carousel slide<?php echo esc_attr( $columns . $animation ); ?>"<?php echo wp_kses_post( $auto . $time . $height ); ?>>
 
 			<?php if ( 'false' !== $indicators ) { ?>
 
@@ -201,11 +215,11 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 			<div class="carousel-inner">
 				<?php
 				foreach ( $carousel as $index => $slide ) {
-					$active = ( isset( $slide['image'] ) ) ? '' : 'no-thumb';
-					$active .= ( 0 === $index ) ? ' active' : '';
+					$active  = ( 0 === $index ) ? ' active' : '';
+					$cap_img = ( !isset( $slide['image'] ) ) ? ' no-image' : '';
 					?>
 
-					<div class="carousel-item <?php echo esc_attr( $active ); ?>">
+					<div class="carousel-item<?php echo esc_attr( $active ); ?>"<?php echo wp_kses_post( $height ); ?>>
 
 						<?php if ( isset( $slide['block'] ) ) { ?>
 
@@ -214,10 +228,17 @@ function ekiline_carousel_html( $carousel, $columns, $control, $indicators, $aut
 						<?php } else { ?>
 
 							<?php if ( isset( $slide['image'] ) ) { ?>
-								<img class="img-fluid" src="<?php echo esc_url( $slide['image'] ); ?>" alt="<?php echo esc_html( $slide['alt'] ); ?>" title="<?php echo esc_html( $slide['title'] ); ?>" loading="lazy">
+
+								<?php // 05-03-22: adicion de videos en el carrusel. ?>
+								<?php if ( isset( $slide['mimetype'] ) && str_contains( $slide['mimetype'], 'video') ) { ?>
+									<video class="carousel-media wp-block-cover__video-background intrinsic-ignore" autoplay="" muted="" loop="" playsinline="" controls="" src="<?php echo esc_url( $slide['image'] ); ?>" data-object-fit="cover"></video>
+								<?php } else { ?>
+									<img class="carousel-media img-fluid" src="<?php echo esc_url( $slide['image'] ); ?>" alt="<?php echo esc_html( $slide['alt'] ); ?>" title="<?php echo esc_html( $slide['title'] ); ?>" loading="lazy">
+								<?php } ?>
+
 							<?php } ?>
 
-							<div class="carousel-caption text-dark">
+							<div class="carousel-caption <?php echo esc_attr( $cap_img ); ?>">
 
 								<?php if ( isset( $slide['title'] ) && $slide['title'] ) { ?>
 									<h3>

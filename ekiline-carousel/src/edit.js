@@ -104,7 +104,7 @@ export default function Edit(props) {
 						value={ attributes.ChooseType }
 						options={ [
 							{ label: __( 'Posts', 'ekiline-carousel' ), value: 'posts' },
-							{ label: __( 'Images', 'ekiline-carousel' ), value: 'images' },
+							{ label: __( 'Images / Video', 'ekiline-carousel' ), value: 'images' },
 						] }
 						onChange={ ( ChooseType ) =>
 							setAttributes( { ChooseType } )
@@ -130,7 +130,8 @@ export default function Edit(props) {
 									}
 									setAttributes( { SetIds: img_ids } );
 								} }
-								allowedTypes={ [ 'image' ] }
+								// ref: https://github.com/WordPress/gutenberg/blob/HEAD/packages/block-editor/src/components/media-upload/README.md.
+								allowedTypes={ [ 'image', 'video' ] }
 								multiple={ true }
 								value={ attributes.SetIds }
 								render={ ( { open } ) => (
@@ -255,6 +256,15 @@ export default function Edit(props) {
 						] }
 						onChange={ ( SetAnimation ) =>
 							setAttributes( { SetAnimation } )
+						}
+					/>
+
+					<TextControl
+						label={ __( 'Height in pixels, set zero to see full display height.', 'ekiline-carousel' ) }
+						type="number"
+						value={ attributes.SetHeight }
+						onChange={ ( newval ) =>
+							setAttributes( { SetHeight: parseInt( newval ) } )
 						}
 					/>
 				</PanelBody>

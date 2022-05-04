@@ -123,6 +123,10 @@ function ekiline_blocks_ekiline_carousel_block_init() {
 					'type' => 'string',
 					'default' => '',
 				],
+				'SetHeight' => [
+					'type' => 'number',
+					'default' => '480',
+				],
 			]
 
 		)
@@ -179,6 +183,9 @@ function ekiline_carousel_dynamic_render_callback( $block_attributes, $content )
 	}
 	if ( '' !== $block_attributes['SetAnimation'] ){
 		$carousel_args .= 'animation="' . $block_attributes['SetAnimation'] . '" ';
+	}
+	if ( '480' !== $block_attributes['SetHeight'] ){
+		$carousel_args .= 'height="' . $block_attributes['SetHeight'] . '" ';
 	}
 
 	$defaultClassName = '';
