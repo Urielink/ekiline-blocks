@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "ekiline-blocks/ekiline-collapse",
+	"version": "0.1.0",
+	"title": "Ekiline Collapse",
+	"category": "design",
+	"icon": "editor-more",
+	"description": "Add collapse content in your page.",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "ekiline-collapse",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

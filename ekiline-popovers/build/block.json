@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "ekiline-blocks/ekiline-popovers",
+	"version": "0.1.0",
+	"title": "Ekiline Popovers",
+	"category": "design",
+	"icon": "admin-comments",
+	"description": "Add popovers to your links or buttons",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "ekiline-popovers",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

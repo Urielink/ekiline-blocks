@@ -1,0 +1,17 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "ekiline-blocks/ekiline-progress",
+	"version": "0.1.0",
+	"title": "Ekiline Progress",
+	"category": "design",
+	"icon": "clock",
+	"description": "Add progress line to your content.",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "ekiline-progress",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

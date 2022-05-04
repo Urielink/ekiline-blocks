@@ -58,7 +58,13 @@ require plugin_dir_path( __FILE__ ) . '/ekiline-tabs/ekiline-tabs.php';
 /**
  * Bloque Modal
  **/
-// require plugin_dir_path( __FILE__ ) . '/ekiline-modal/ekiline-modal.php';
+require plugin_dir_path( __FILE__ ) . '/ekiline-modal/ekiline-modal.php';
+
+/**
+ * Bloque Acordeon y Collapse
+ **/
+require plugin_dir_path( __FILE__ ) . '/ekiline-accordion/ekiline-accordion.php';
+require plugin_dir_path( __FILE__ ) . '/ekiline-collapse/ekiline-collapse.php';
 
 
 /**
