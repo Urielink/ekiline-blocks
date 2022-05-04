@@ -56,6 +56,12 @@ require plugin_dir_path( __FILE__ ) . '/ekiline-carousel/ekiline-carousel.php';
 require plugin_dir_path( __FILE__ ) . '/ekiline-tabs/ekiline-tabs.php';
 
 /**
+ * Bloque Modal
+ **/
+require plugin_dir_path( __FILE__ ) . '/ekiline-modal/ekiline-modal.php';
+
+
+/**
  * Personalizaciones
  **/
 require plugin_dir_path( __FILE__ ) . '/ekiline-custom-features/ekiline-custom-features.php';

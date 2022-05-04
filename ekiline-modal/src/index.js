@@ -36,3 +36,12 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 	 */
 	save,
 });
+
+/**
+ * Incorporar bloques a coleccion.
+ */
+ import { registerBlockCollection } from '@wordpress/blocks';
+ registerBlockCollection( 'ekiline-blocks', {
+	 title: 'Ekiline Blocks',
+	 icon: 'layout',
+ } );
