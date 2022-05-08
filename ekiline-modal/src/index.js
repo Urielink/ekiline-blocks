@@ -30,7 +30,8 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
-import './style.scss';
+// import './style.scss';
+import './editor.scss';
 
 /**
  * Internal dependencies
@@ -95,31 +96,31 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 	attributes:{
 		modalShow: {
 			type: 'string',
-			default: 'default', //top,right,bottom,left-window.
+			default: 'default', // top, right, bottom, left.
 		},
 		modalSize: {
 			type: 'string',
-			default: 'default', //small, large, extralarge, fullwindow.
+			default: 'default', // small, large, extralarge, fullwindow.
 		},
 		modalAlign: {
 			type: 'boolean',
-			default: false, //center
+			default: true, // center.
 		},
 		modalHeader: {
 			type: 'boolean',
-			default: false, 
+			default: false,
 		},
 		modalFooter: {
 			type: 'boolean',
-			default: false, 
+			default: false,
 		},
-		modalStaticBackdrop: {
+		modalBackdrop: {
 			type: 'boolean',
-			default: false, // cerrar al clic fuera de modal.
+			default: true, // cerrar modal dando clic fuera.
 		},
-		modalBackground: {
+		modalKeyboard: {
 			type: 'boolean',
-			default: false, // Ocultar el fondo.
+			default: true, // cerrar modal con teclado.
 		},
 		modalGrow: {
 			type: 'boolean',
@@ -146,7 +147,7 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 
 		// personalizar clase
 		const blockProps = useBlockProps( {
-			className: 'group-modal',
+			// className: 'group-modal',
 		} );
 
 		return (
@@ -206,21 +207,21 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Close modal only with close buttons', 'ekiline-modal' ) }
-						checked={ attributes.modalStaticBackdrop }
-						onChange={ ( modalStaticBackdrop ) =>
-							setAttributes( { modalStaticBackdrop } )
+						label={ __( 'Enable background click to close', 'ekiline-modal' ) }
+						checked={ attributes.modalBackdrop }
+						onChange={ ( modalBackdrop ) =>
+							setAttributes( { modalBackdrop } )
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Clear modal back', 'ekiline-modal' ) }
-						checked={ attributes.modalBackground }
-						onChange={ ( modalBackground ) =>
-							setAttributes( { modalBackground } )
+						label={ __( 'Enable ESC key to close', 'ekiline-modal' ) }
+						checked={ attributes.modalKeyboard }
+						onChange={ ( modalKeyboard ) =>
+							setAttributes( { modalKeyboard } )
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Center in window', 'ekiline-modal' ) }
+						label={ __( 'Show resize modal button', 'ekiline-modal' ) }
 						checked={ attributes.modalGrow }
 						onChange={ ( modalGrow ) =>
 							setAttributes( { modalGrow } )
@@ -245,20 +246,49 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 
 		// Clases y atributos auxiliares, incluir save.
 		const blockProps = useBlockProps.save( {
-			className: (
+			className:
 				'group-modal modal fade'
 				+ ( attributes.modalShow != 'default' ? attributes.modalShow : '' )
-			),
-			// id: 'random',
+			,
+			'data-bs-backdrop' : attributes.modalBackdrop,
+			'data-bs-keyboard' : attributes.modalKeyboard,
 		} );
 
 		const dialogProps = useBlockProps.save({
-			className: (
+			className:
 			'modal-dialog'
 			+ ( attributes.modalAlign ? ' modal-dialog-centered' : '' )
 			+ ( attributes.modalSize != 'default' ? attributes.modalSize : '' )
-			),
+			,
 		});
+
+		const headerProps = useBlockProps.save({
+			className:
+				'modal-header'
+				+ ( attributes.modalHeader ? ' visually-hidden' : '' )
+				,
+		});
+		const footerProps = useBlockProps.save({
+			className:
+				'modal-footer'
+				+ ( attributes.modalFooter ? ' visually-hidden' : '' )
+				,
+		});
+
+	// Componente Boton.
+		function ModalGrowBtn() {
+			if ( attributes.modalGrow ) {
+				return (
+					<button
+						type="button"
+						class="modal-resize btn btn-sm btn-outline-secondary"
+						aria-label={__( 'play btn', 'ekiline-modal' )}>
+							<span class="dashicons dashicons-editor-expand"></span>
+					</button>
+				)
+			}
+		}
+
 
 		return (
 			<div
@@ -270,16 +300,19 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			>
 				<div class={dialogProps.className}>
 					<div class="modal-content">
-						<div class="modal-header">
+
+						<div class={headerProps.className}>
 							<h5 class="modal-title" id={ blockProps.id + 'Title' }>Modal title</h5>
+							<ModalGrowBtn/>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
+
 						<div class="modal-body">
 
 						<InnerBlocks.Content />
 
 						</div>
-						<div class="modal-footer">
+						<div class={footerProps.className}>
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
 								Close
 							</button>

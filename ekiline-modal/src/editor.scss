@@ -5,6 +5,16 @@
  */
 
 .wp-block-ekiline-blocks-ekiline-modal {
-	background-color: red;
-	border: 1px dotted #f00;
+	border: 1px dashed #000000;
+	padding: 12px;
+	border-radius: 2px !important;
+	background-color: #f0f0f0;
+}
+.wp-block-ekiline-blocks-ekiline-modal > .block-editor-inner-blocks{
+	background-color: #fff;
+}
+
+.wp-block-ekiline-blocks-ekiline-modal.is-selected,
+.wp-block-ekiline-blocks-ekiline-modal.has-child-selected {
+	border: 1px solid #000000;
 }
