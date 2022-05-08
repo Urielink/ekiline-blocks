@@ -115,14 +115,14 @@ __webpack_require__.r(__webpack_exports__);
       default: 'default' //top,right,bottom,left-window.
 
     },
-    modalAlign: {
-      type: 'boolean',
-      default: false //center
-
-    },
     modalSize: {
       type: 'string',
       default: 'default' //small, large, extralarge, fullwindow.
+
+    },
+    modalAlign: {
+      type: 'boolean',
+      default: false //center
 
     },
     modalHeader: {
@@ -133,7 +133,7 @@ __webpack_require__.r(__webpack_exports__);
       type: 'boolean',
       default: false
     },
-    modalClose: {
+    modalStaticBackdrop: {
       type: 'boolean',
       default: false // cerrar al clic fuera de modal.
 
@@ -160,19 +160,16 @@ __webpack_require__.r(__webpack_exports__);
   edit: props => {
     const {
       attributes,
-      setAttributes,
-      blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)({
-        className: 'group-modal'
-      })
+      setAttributes
     } = props; // Cargar un preset.
 
     const CHILD_TEMPLATE = [['core/paragraph', {
       content: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Add your content and blocks', 'ekiline-tabs')
     }]]; // personalizar clase
-    // const blockProps = useBlockProps( {
-    // 	className: 'group-modal',
-    // } );
 
+    const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps)({
+      className: 'group-modal'
+    });
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", blockProps, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.PanelBody, {
       title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Modal Params', 'ekiline-modal'),
       initialOpen: true
@@ -184,13 +181,13 @@ __webpack_require__.r(__webpack_exports__);
         value: ''
       }, {
         label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Right', 'ekiline-modal'),
-        value: 'right-aside'
+        value: ' right-aside'
       }, {
         label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Bottom', 'ekiline-modal'),
-        value: 'move-from-bottom'
+        value: ' move-from-bottom'
       }, {
         label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Left', 'ekiline-modal'),
-        value: 'left-aside'
+        value: ' left-aside'
       }],
       onChange: modalShow => setAttributes({
         modalShow
@@ -223,6 +220,36 @@ __webpack_require__.r(__webpack_exports__);
       onChange: modalAlign => setAttributes({
         modalAlign
       })
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Hide header', 'ekiline-modal'),
+      checked: attributes.modalHeader,
+      onChange: modalHeader => setAttributes({
+        modalHeader
+      })
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Hide footer', 'ekiline-modal'),
+      checked: attributes.modalFooter,
+      onChange: modalFooter => setAttributes({
+        modalFooter
+      })
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Close modal only with close buttons', 'ekiline-modal'),
+      checked: attributes.modalStaticBackdrop,
+      onChange: modalStaticBackdrop => setAttributes({
+        modalStaticBackdrop
+      })
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Clear modal back', 'ekiline-modal'),
+      checked: attributes.modalBackground,
+      onChange: modalBackground => setAttributes({
+        modalBackground
+      })
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_4__.ToggleControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Center in window', 'ekiline-modal'),
+      checked: attributes.modalGrow,
+      onChange: modalGrow => setAttributes({
+        modalGrow
+      })
     }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.InnerBlocks, {
       template: CHILD_TEMPLATE
     }));
@@ -238,11 +265,11 @@ __webpack_require__.r(__webpack_exports__);
     } = _ref;
     // Clases y atributos auxiliares, incluir save.
     const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps.save({
-      className: 'group-modal modal fade ' + attributes.modalShow // id: 'random',
+      className: 'group-modal modal fade' + (attributes.modalShow != 'default' ? attributes.modalShow : '') // id: 'random',
 
     });
     const dialogProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__.useBlockProps.save({
-      className: 'modal-dialog' + (attributes.modalAlign ? ' modal-dialog-centered' : '') + attributes.modalSize
+      className: 'modal-dialog' + (attributes.modalAlign ? ' modal-dialog-centered' : '') + (attributes.modalSize != 'default' ? attributes.modalSize : '')
     });
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, blockProps, {
       tabindex: "-1",

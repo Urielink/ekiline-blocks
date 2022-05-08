@@ -21,7 +21,7 @@ import {
  *
  * @see https://developer.wordpress.org/block-editor/packages/packages-i18n/
  */
- import { __ } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -70,15 +70,15 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 	/**
 	 * @see https://make.wordpress.org/core/2020/11/18/block-api-version-2/
 	 */
-	 apiVersion: 2,
+	apiVersion: 2,
 
 	/**
 	 * Parametros de alta.
 	 * @see: https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/ 
 	 */
-    title: __( 'Modal group, full control', 'ekiline-modal' ),
+	title: __( 'Modal group, full control', 'ekiline-modal' ),
 	// parent: ['ekiline-blocks/ekiline-tabs'], // no parent.
-    icon: 'editor-kitchensink',
+	icon: 'editor-kitchensink',
 	description: __( 'Add your content here, then invoque with a link.', 'ekiline-modal' ),
 	category: 'design',
 	supports: {
@@ -97,13 +97,13 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			type: 'string',
 			default: 'default', //top,right,bottom,left-window.
 		},
-		modalAlign: {
-			type: 'boolean',
-			default: false, //center
-		},
 		modalSize: {
 			type: 'string',
 			default: 'default', //small, large, extralarge, fullwindow.
+		},
+		modalAlign: {
+			type: 'boolean',
+			default: false, //center
 		},
 		modalHeader: {
 			type: 'boolean',
@@ -113,7 +113,7 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			type: 'boolean',
 			default: false, 
 		},
-		modalClose: {
+		modalStaticBackdrop: {
 			type: 'boolean',
 			default: false, // cerrar al clic fuera de modal.
 		},
@@ -135,15 +135,9 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 	 * @see ./edit.js
 	 */
 	// edit: Edit,
-    edit: (props) => {
+	edit: (props) => {
 
-		const {
-			attributes,
-			setAttributes,
-				blockProps = useBlockProps( {
-				className: 'group-modal',
-			} )
-		} = props;
+		const { attributes, setAttributes } = props;
 
 		// Cargar un preset.
 		const CHILD_TEMPLATE = [
@@ -151,9 +145,9 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 		];
 
 		// personalizar clase
-		// const blockProps = useBlockProps( {
-		// 	className: 'group-modal',
-		// } );
+		const blockProps = useBlockProps( {
+			className: 'group-modal',
+		} );
 
 		return (
 			<div { ...blockProps }>
@@ -166,9 +160,9 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 						value={ attributes.modalShow }
 						options={ [
 							{ label: __( 'Default', 'ekiline-modal' ), value: '' },
-							{ label: __( 'Right', 'ekiline-modal' ), value: 'right-aside' },
-							{ label: __( 'Bottom', 'ekiline-modal' ), value: 'move-from-bottom' },
-							{ label: __( 'Left', 'ekiline-modal' ), value: 'left-aside' },
+							{ label: __( 'Right', 'ekiline-modal' ), value: ' right-aside' },
+							{ label: __( 'Bottom', 'ekiline-modal' ), value: ' move-from-bottom' },
+							{ label: __( 'Left', 'ekiline-modal' ), value: ' left-aside' },
 						] }
 						onChange={ ( modalShow ) =>
 							setAttributes( { modalShow } )
@@ -197,6 +191,41 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 							setAttributes( { modalAlign } )
 						}
 					/>
+					<ToggleControl
+						label={ __( 'Hide header', 'ekiline-modal' ) }
+						checked={ attributes.modalHeader }
+						onChange={ ( modalHeader ) =>
+							setAttributes( { modalHeader } )
+						}
+					/>
+					<ToggleControl
+						label={ __( 'Hide footer', 'ekiline-modal' ) }
+						checked={ attributes.modalFooter }
+						onChange={ ( modalFooter ) =>
+							setAttributes( { modalFooter } )
+						}
+					/>
+					<ToggleControl
+						label={ __( 'Close modal only with close buttons', 'ekiline-modal' ) }
+						checked={ attributes.modalStaticBackdrop }
+						onChange={ ( modalStaticBackdrop ) =>
+							setAttributes( { modalStaticBackdrop } )
+						}
+					/>
+					<ToggleControl
+						label={ __( 'Clear modal back', 'ekiline-modal' ) }
+						checked={ attributes.modalBackground }
+						onChange={ ( modalBackground ) =>
+							setAttributes( { modalBackground } )
+						}
+					/>
+					<ToggleControl
+						label={ __( 'Center in window', 'ekiline-modal' ) }
+						checked={ attributes.modalGrow }
+						onChange={ ( modalGrow ) =>
+							setAttributes( { modalGrow } )
+						}
+					/>
 
 					</PanelBody>
 				</InspectorControls>
@@ -204,27 +233,34 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 				{/* El bloque */}
 				<InnerBlocks
 					template={ CHILD_TEMPLATE }/>
-            </div>
-        );
-    },
+			</div>
+		);
+	},
 
 	/**
 	 * @see ./save.js
 	 */
 	// save,
-    save: ( { attributes } ) => {
+	save: ( { attributes } ) => {
 
 		// Clases y atributos auxiliares, incluir save.
 		const blockProps = useBlockProps.save( {
-			className: 'group-modal modal fade ' + attributes.modalShow,
+			className: (
+				'group-modal modal fade'
+				+ ( attributes.modalShow != 'default' ? attributes.modalShow : '' )
+			),
 			// id: 'random',
 		} );
 
 		const dialogProps = useBlockProps.save({
-			className: 'modal-dialog' + ( attributes.modalAlign ? ' modal-dialog-centered' : '' ) +  attributes.modalSize,
+			className: (
+			'modal-dialog'
+			+ ( attributes.modalAlign ? ' modal-dialog-centered' : '' )
+			+ ( attributes.modalSize != 'default' ? attributes.modalSize : '' )
+			),
 		});
 
-        return (
+		return (
 			<div
 				{ ...blockProps }
 				tabindex="-1"
@@ -264,8 +300,8 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 /**
  * Incorporar bloques a coleccion.
  */
- import { registerBlockCollection } from '@wordpress/blocks';
- registerBlockCollection( 'ekiline-blocks', {
-	 title: 'Ekiline Blocks',
-	 icon: 'layout',
- } );
+import { registerBlockCollection } from '@wordpress/blocks';
+registerBlockCollection( 'ekiline-blocks', {
+	title: 'Ekiline Blocks',
+	icon: 'layout',
+} );

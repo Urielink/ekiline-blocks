@@ -84,17 +84,18 @@ require plugin_dir_path( __FILE__ ) . '/ekiline-custom-features/ekiline-custom-f
 /*
 * Para conocer la lista de bloques:
 * @ref https://developer.wordpress.org/reference/functions/get_dynamic_block_names/
+* @ref https://developer.wordpress.org/block-editor/reference-guides/core-blocks/ 
 * get_dynamic_block_names();
 */
 
-// function show_registered_blocks(){
-//    // Conocer los bloques existentes.
-//    $bloques = get_dynamic_block_names();
-//    $lista = '';
-//    foreach($bloques as $key => $bloque) {
-//        $lista .= '(' . $key  . ') ' . $bloque . ( next($bloques) === true ? ', ' : '' ) ;
-//    }
-//    $aviso = '<div class="alert alert-success">' . $lista . '</div>';
-//    echo $aviso;
-// }
-// add_action('wp_footer','show_registered_blocks',100);
+function show_registered_blocks(){
+   // Conocer los bloques existentes.
+   $bloques = get_dynamic_block_names();
+   $lista = '';
+   foreach($bloques as $key => $bloque) {
+       $lista .= '(' . $key  . ') ' . $bloque . ( next($bloques) === true ? ', ' : '' ) ;
+   }
+   $aviso = '<div class="alert alert-success">' . $lista . '</div>';
+   echo $aviso;
+}
+add_action('wp_footer','show_registered_blocks',100);
