@@ -4,7 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 import { registerBlockType } from '@wordpress/blocks';
-import { useBlockProps, InnerBlocks, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks, InspectorControls, RichText } from '@wordpress/block-editor';
 import {
 	PanelBody,
 	SelectControl,
@@ -130,6 +130,13 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			type: 'number',
 			default: '5000',
 		},
+		// Personalizar titulo.
+		modalTitle: {
+			type: 'string',
+			source: 'html',
+			selector: 'p',
+			default: __( 'Add modal title', 'ekiline-modal' ),
+		},
 	},
 
 	/**
@@ -232,6 +239,15 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 				</InspectorControls>
 
 				{/* El bloque */}
+
+				<RichText
+					withoutInteractiveFormatting={ true }
+					allowedFormats={ ['core/bold', 'core/italic', 'core/image', 'core/align', 'ekiline-format/find-anchor' ] } //un formato nuevo para TAB.
+					tagName="p" // The tag here is the element output and editable in the admin
+					value={ attributes.modalTitle } // Any existing content, either from the database or an attribute default
+					onChange={ ( modalTitle ) => setAttributes( { modalTitle } ) } // Store updated content as a block attribute
+				/>
+
 				<InnerBlocks
 					template={ CHILD_TEMPLATE }/>
 			</div>
@@ -302,7 +318,14 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 					<div class="modal-content">
 
 						<div class={headerProps.className}>
-							<h5 class="modal-title" id={ blockProps.id + 'Title' }>Modal title</h5>
+
+							<RichText.Content
+								className='modal-title'
+								tagName="p"
+								id={ blockProps.id + 'Title' }
+								value={ attributes.modalTitle }
+							/>
+
 							<ModalGrowBtn/>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
