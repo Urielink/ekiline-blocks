@@ -66,12 +66,6 @@ import './editor.scss';
  *
  * No mostrar en inspector.
  * @ref https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/
- *
- * Uso de Lock
- * @ref https://developer.wordpress.org/block-editor/how-to-guides/block-tutorial/nested-blocks-inner-blocks/
- * @ref https://github.com/WordPress/gutenberg/blob/17baf6f33c391daa44daf8b3465f27aba8cf200d/docs/reference-guides/block-api/block-templates.md#individual-block-locking.
- * @ref https://github.com/WordPress/gutenberg/blob/17baf6f33c391daa44daf8b3465f27aba8cf200d/packages/block-editor/src/components/inner-blocks/README.md#templatelock
- *
  */
 registerBlockType('ekiline-blocks/ekiline-modal', {
 	/**
@@ -84,10 +78,15 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 	 * @see: https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/ 
 	 */
 	title: __( 'Modal group, full control', 'ekiline-modal' ),
+	// parent: ['ekiline-blocks/ekiline-tabs'], // no parent.
 	icon: 'editor-kitchensink',
-	description: __( 'Add your content here, then invoque with a link anchor #anchor.', 'ekiline-modal' ),
+	description: __( 'Add your content here, then invoque with a link.', 'ekiline-modal' ),
 	category: 'design',
 	supports: {
+		// html: true,
+		// reusable: true,
+		// multiple: true,
+		// inserter: true,
 		anchor: true,
 	},
 
@@ -131,6 +130,13 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			type: 'number',
 			default: '5000',
 		},
+		// Personalizar titulo.
+		modalTitle: {
+			type: 'string',
+			source: 'html',
+			selector: 'p',
+			default: __( 'Add modal title', 'ekiline-modal' ),
+		},
 	},
 
 	/**
@@ -141,28 +147,9 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 
 		const { attributes, setAttributes } = props;
 
-		// Restringir los bloques, Cargar un preset.
-		const PARENT_ALLOWED_BLOCKS = [ 'ekiline-blocks/ekiline-modal-header', 'ekiline-blocks/ekiline-modal-body', 'ekiline-blocks/ekiline-modal-footer' ];
+		// Cargar un preset.
 		const CHILD_TEMPLATE = [
-			[ 'ekiline-blocks/ekiline-modal-header', {
-				lock: {
-					remove: false,
-					move: true,
-				}
-			} ],
-			[ 'ekiline-blocks/ekiline-modal-body', {
-				lock: {
-					remove: false,
-					move: true,
-				}
-			} ],
-			[ 'ekiline-blocks/ekiline-modal-footer', {
-				lock: {
-					remove: false,
-					move: true,
-				}
-			} ],
-
+			[ 'core/paragraph', { content: __( 'Add your content and blocks', 'ekiline-tabs' ) } ],
 		];
 
 		// personalizar clase
@@ -252,12 +239,17 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 				</InspectorControls>
 
 				{/* El bloque */}
-				<InnerBlocks
-				allowedBlocks={ PARENT_ALLOWED_BLOCKS }
-					template={ CHILD_TEMPLATE }
-					// templateLock="all"
-					// templateLock="insert"
+
+				<RichText
+					withoutInteractiveFormatting={ true }
+					allowedFormats={ ['core/bold', 'core/italic', 'core/image', 'core/align', 'ekiline-format/find-anchor' ] } //un formato nuevo para TAB.
+					tagName="p" // The tag here is the element output and editable in the admin
+					value={ attributes.modalTitle } // Any existing content, either from the database or an attribute default
+					onChange={ ( modalTitle ) => setAttributes( { modalTitle } ) } // Store updated content as a block attribute
 				/>
+
+				<InnerBlocks
+					template={ CHILD_TEMPLATE }/>
 			</div>
 		);
 	},
@@ -286,6 +278,19 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			,
 		});
 
+		const headerProps = useBlockProps.save({
+			className:
+				'modal-header'
+				+ ( attributes.modalHeader ? ' visually-hidden' : '' )
+				,
+		});
+		const footerProps = useBlockProps.save({
+			className:
+				'modal-footer'
+				+ ( attributes.modalFooter ? ' visually-hidden' : '' )
+				,
+		});
+
 	// Componente Boton.
 		function ModalGrowBtn() {
 			if ( attributes.modalGrow ) {
@@ -312,15 +317,24 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 				<div class={dialogProps.className}>
 					<div class="modal-content">
 
-						{/* <div class={headerProps.className}>
+						<div class={headerProps.className}>
+
+							<RichText.Content
+								className='modal-title'
+								tagName="p"
+								id={ blockProps.id + 'Title' }
+								value={ attributes.modalTitle }
+							/>
+
 							<ModalGrowBtn/>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 
 						<div class="modal-body">
 
-						</div>
+						<InnerBlocks.Content />
 
+						</div>
 						<div class={footerProps.className}>
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
 								Close
@@ -328,11 +342,7 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 							<button type="button" class="btn btn-primary">
 								Save changes
 							</button>
-						</div> */}
-
-						<InnerBlocks.Content />
-
-
+						</div>
 					</div>
 				</div>
 
@@ -341,177 +351,6 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 	},
 
 });
-
-/**
- * - ekiline-modal-header
- */
-
-registerBlockType( 'ekiline-blocks/ekiline-modal-header', {
-	title: __( 'Modal header', 'ekiline-modal' ),
-	parent: ['ekiline-blocks/ekiline-modal'],
-	icon: 'feedback',
-	description:__( 'Modal header content. ', 'ekiline-modal' ),
-	category: 'design',
-	supports: {
-		html: false,
-		reusable: false,
-		multiple: false,
-		inserter: true,
-	},
-	edit: () => {
-
-		// Restringir los bloques, Cargar un preset.
-		const PARENT_ALLOWED_BLOCKS = [ 'core/heading', 'core/paragraph' ];
-		// Cargar un preset.
-		const CHILD_TEMPLATE = [
-			[ 'core/heading', {
-				content: __( 'Add modal title', 'ekiline-modal' ),
-				level: 4,
-			} ],
-		];
-
-		// personalizar clase
-		const blockProps = useBlockProps( {
-			className: 'editor-modal-header',
-		} );
-
-		return (
-			<div { ...blockProps }>
-				<InnerBlocks
-					allowedBlocks={ PARENT_ALLOWED_BLOCKS }
-					template={ CHILD_TEMPLATE }
-					/>
-			</div>
-		);
-	},
-
-	save: () => {
-
-		// Clases y atributos auxiliares, incluir save.
-		const blockProps = useBlockProps.save( {
-			className: 'modal-header',
-		} );
-
-		return (
-			<div { ...blockProps }>
-				<InnerBlocks.Content />
-			</div>
-		);
-	},
-
-} );
-
-
-/**
- * - ekiline-modal-body
- */
-
-registerBlockType( 'ekiline-blocks/ekiline-modal-body', {
-	title: __( 'Modal body content', 'ekiline-modal' ),
-	parent: ['ekiline-blocks/ekiline-modal'],
-	icon: 'feedback',
-	description:__( 'Modal body content. ', 'ekiline-modal' ),
-	category: 'design',
-	supports: {
-		html: false,
-		reusable: false,
-		multiple: false,
-		inserter: true,
-	},
-	edit: () => {
-
-		// Cargar un preset.
-		const CHILD_TEMPLATE = [
-			[ 'core/paragraph', { content: __( 'Add modal content blocks', 'ekiline-modal' ) } ],
-		];
-
-		// personalizar clase
-		const blockProps = useBlockProps( {
-			className: 'editor-modal-body',
-		} );
-
-		return (
-			<div { ...blockProps }>
-				<InnerBlocks
-					template={ CHILD_TEMPLATE }
-					/>
-			</div>
-		);
-	},
-
-	save: () => {
-
-		// Clases y atributos auxiliares, incluir save.
-		const blockProps = useBlockProps.save( {
-			className: 'modal-body',
-		} );
-
-		return (
-			<div { ...blockProps }>
-				<InnerBlocks.Content />
-			</div>
-		);
-	},
-
-} );
-
-
-/**
- * - ekiline-modal-footer
- */
-
- registerBlockType( 'ekiline-blocks/ekiline-modal-footer', {
-	title: __( 'Modal footer', 'ekiline-modal' ),
-	parent: ['ekiline-blocks/ekiline-modal'],
-	icon: 'feedback',
-	description:__( 'Inner footer content. ', 'ekiline-modal' ),
-	category: 'design',
-	supports: {
-		html: false,
-		reusable: false,
-		multiple: false,
-		inserter: true,
-	},
-	edit: () => {
-
-		// Restringir los bloques, Cargar un preset.
-		const PARENT_ALLOWED_BLOCKS = [ 'core/paragraph' ];
-		// Cargar un preset.
-		const CHILD_TEMPLATE = [
-			[ 'core/paragraph', { content: __( 'Add modal footer text', 'ekiline-modal' ) } ],
-		];
-
-		// personalizar clase
-		const blockProps = useBlockProps( {
-			className: 'editor-modal-footer',
-		} );
-
-		return (
-			<div { ...blockProps }>
-				<InnerBlocks
-					allowedBlocks={ PARENT_ALLOWED_BLOCKS }
-					template={ CHILD_TEMPLATE }
-				/>
-			</div>
-		);
-	},
-
-	save: () => {
-
-		// Clases y atributos auxiliares, incluir save.
-		const blockProps = useBlockProps.save( {
-			className: 'modal-footer',
-		} );
-
-		return (
-			<div { ...blockProps }>
-				<InnerBlocks.Content />
-			</div>
-		);
-	},
-
-} );
-
 
 
 /**
