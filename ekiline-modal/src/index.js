@@ -4,17 +4,8 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 import { registerBlockType } from '@wordpress/blocks';
-import { useBlockProps, InnerBlocks, InspectorControls, RichText } from '@wordpress/block-editor';
-import {
-	PanelBody,
-	SelectControl,
-	ToggleControl,
-	// ToolbarGroup,
-	// ToolbarItem,
-	// Button,
-	// TextControl,
-	// RangeControl,
-} from '@wordpress/components';
+import { useBlockProps, InnerBlocks, InspectorControls } from '@wordpress/block-editor';
+import{PanelBody,SelectControl,ToggleControl,} from '@wordpress/components';
 
 /**
  * Retrieves the translation of text.
@@ -46,8 +37,6 @@ import './editor.scss';
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  *
  * Bloques necesarios para modal.
- * .modal-widget-group
- * - .modal-widget-link-button
  * - .modal
  * - - .modal-dialog
  * - - - .modal-content
@@ -167,8 +156,28 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 
 		// personalizar clase
 		const blockProps = useBlockProps( {
-			// className: 'group-modal',
+			className: 'group-modal',
 		} );
+
+		/**
+		 * Control personalizado: recordatorio
+		 */
+		function ModalUserRemind(){
+
+			if ( attributes.anchor ){
+				return(
+					<div class="editor-modal-route has-anchor">
+						{ __( 'Use anchor in links to open/close modal. Anchor link: #', 'ekiline-modal' ) + attributes.anchor }
+					</div>
+					)
+			}
+
+			return(
+				<div class="editor-modal-route">
+					{ __( 'Do not forget to add an anchor. ', 'ekiline-modal' )}
+				</div>
+			)
+		}
 
 		return (
 			<div { ...blockProps }>
@@ -258,6 +267,7 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 					// templateLock="all"
 					// templateLock="insert"
 				/>
+				<ModalUserRemind/>
 			</div>
 		);
 	},
@@ -311,28 +321,8 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			>
 				<div class={dialogProps.className}>
 					<div class="modal-content">
-
-						{/* <div class={headerProps.className}>
-							<ModalGrowBtn/>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-
-						<div class="modal-body">
-
-						</div>
-
-						<div class={footerProps.className}>
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-								Close
-							</button>
-							<button type="button" class="btn btn-primary">
-								Save changes
-							</button>
-						</div> */}
-
+						<ModalGrowBtn/>
 						<InnerBlocks.Content />
-
-
 					</div>
 				</div>
 
@@ -395,6 +385,7 @@ registerBlockType( 'ekiline-blocks/ekiline-modal-header', {
 		return (
 			<div { ...blockProps }>
 				<InnerBlocks.Content />
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
 			</div>
 		);
 	},
@@ -475,10 +466,11 @@ registerBlockType( 'ekiline-blocks/ekiline-modal-body', {
 	edit: () => {
 
 		// Restringir los bloques, Cargar un preset.
-		const PARENT_ALLOWED_BLOCKS = [ 'core/paragraph' ];
+		const PARENT_ALLOWED_BLOCKS = [ 'core/paragraph', 'core/buttons', 'core/button' ];
 		// Cargar un preset.
 		const CHILD_TEMPLATE = [
 			[ 'core/paragraph', { content: __( 'Add modal footer text', 'ekiline-modal' ) } ],
+			[ 'core/buttons' ],
 		];
 
 		// personalizar clase
@@ -512,74 +504,6 @@ registerBlockType( 'ekiline-blocks/ekiline-modal-body', {
 
 } );
 
-/**
- * boton de cerrar
- */
- registerBlockType( 'ekiline-modal/ekiline-modal-close', {
-    title: __( 'Modal close button', 'ekiline-modal' ),
-	parent: [ 'ekiline-blocks/ekiline-modal-header', 'ekiline-blocks/ekiline-modal-body', 'ekiline-blocks/ekiline-modal-footer' ],
-    icon: 'button',
-	description: __( 'Modal close button, customise, default shows an X.', 'ekiline-modal' ),
-	category: 'design',
-	supports: {
-		html: false,
-		reusable: false,
-		// inserter: false,
-		color: {
-			background: true,
-		},
-	},
-    attributes: {
-        content: {
-            type: 'string',
-            source: 'html',
-            selector: 'button',
-			default: '',
-        },
-    },
-
-    edit: ( { attributes, setAttributes } ) => {
-
-		// personalizar clase
-		const blockProps = useBlockProps( {
-			className: 'editor-btn-close',
-		} );
-
-        return (
-            <RichText
-				withoutInteractiveFormatting={ true }
-				allowedFormats={ ['core/bold', 'core/italic', 'core/image', 'core/align' ] } //un formato nuevo para TAB.
-                tagName="p" // The tag here is the element output and editable in the admin
-                className={ blockProps.className }
-                value={ attributes.content } // Any existing content, either from the database or an attribute default
-                onChange={ ( content ) => setAttributes( { content } ) } // Store updated content as a block attribute
-                // placeholder={ __( 'Titlulo de tab...' ) } // Display this text before any content has been added by the user
-            />
-        );
-    },
-    save: ( { attributes } ) => {
-
-		// personalizar clase
-		const blockProps = useBlockProps.save( {
-			className: 'btn-close',
-		} );
-
-		return (
-			<RichText.Content
-				tagName="button"
-				className={ blockProps.className }
-				value={ attributes.content }
-				data-bs-dismiss="modal"
-				aria-label="Close"
-				type="button"
-			/>
-			// <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		)
-
-    },
-} );
-
-
 
 /**
  * Incorporar bloques a coleccion.
@@ -589,3 +513,10 @@ registerBlockCollection( 'ekiline-blocks', {
 	title: 'Ekiline Blocks',
 	icon: 'layout',
 } );
+
+
+/**
+ * Controles auxiliares
+ * @see https://mariecomet.fr/en/2021/12/14/adding-options-controls-existing-gutenberg-block/
+ */
+
