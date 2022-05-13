@@ -512,6 +512,73 @@ registerBlockType( 'ekiline-blocks/ekiline-modal-body', {
 
 } );
 
+/**
+ * boton de cerrar
+ */
+ registerBlockType( 'ekiline-modal/ekiline-modal-close', {
+    title: __( 'Modal close button', 'ekiline-modal' ),
+	parent: [ 'ekiline-blocks/ekiline-modal-header', 'ekiline-blocks/ekiline-modal-body', 'ekiline-blocks/ekiline-modal-footer' ],
+    icon: 'button',
+	description: __( 'Modal close button, customise, default shows an X.', 'ekiline-modal' ),
+	category: 'design',
+	supports: {
+		html: false,
+		reusable: false,
+		// inserter: false,
+		color: {
+			background: true,
+		},
+	},
+    attributes: {
+        content: {
+            type: 'string',
+            source: 'html',
+            selector: 'button',
+			default: '',
+        },
+    },
+
+    edit: ( { attributes, setAttributes } ) => {
+
+		// personalizar clase
+		const blockProps = useBlockProps( {
+			className: 'editor-btn-close',
+		} );
+
+        return (
+            <RichText
+				withoutInteractiveFormatting={ true }
+				allowedFormats={ ['core/bold', 'core/italic', 'core/image', 'core/align' ] } //un formato nuevo para TAB.
+                tagName="p" // The tag here is the element output and editable in the admin
+                className={ blockProps.className }
+                value={ attributes.content } // Any existing content, either from the database or an attribute default
+                onChange={ ( content ) => setAttributes( { content } ) } // Store updated content as a block attribute
+                // placeholder={ __( 'Titlulo de tab...' ) } // Display this text before any content has been added by the user
+            />
+        );
+    },
+    save: ( { attributes } ) => {
+
+		// personalizar clase
+		const blockProps = useBlockProps.save( {
+			className: 'btn-close',
+		} );
+
+		return (
+			<RichText.Content
+				tagName="button"
+				className={ blockProps.className }
+				value={ attributes.content }
+				data-bs-dismiss="modal"
+				aria-label="Close"
+				type="button"
+			/>
+			// <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		)
+
+    },
+} );
+
 
 
 /**
