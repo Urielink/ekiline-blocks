@@ -352,9 +352,7 @@ __webpack_require__.r(__webpack_exports__);
       if (attributes.anchor) {
         return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {
           class: "editor-modal-route has-anchor"
-        }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Edit link or button as HTML, then copy/modify this attributes', 'ekiline-modal'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("pre", {
-          class: "wp-block-preformatted m-0 p-1"
-        }, "href=\"", '#' + attributes.anchor, "\" data-bs-toggle=\"modal\"  data-bs-target=\"", '#' + attributes.anchor, "\""));
+        }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("pre", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)('Hint: include these attributes in links to open or close this modal (advanced).', 'ekiline-modal'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("br", null), "Open modal: ", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("span", null, "href=\"", '#' + attributes.anchor, "\" data-bs-target=\"", '#' + attributes.anchor, "\" data-bs-toggle=\"modal\""), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("br", null), "Close modal: ", (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("span", null, "href=\"", '#' + attributes.anchor, "\" data-bs-dismiss=\"modal\"")));
       }
 
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("div", {

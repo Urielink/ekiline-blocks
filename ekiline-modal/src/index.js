@@ -167,9 +167,12 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			if ( attributes.anchor ){
 				return(
 					<div class="editor-modal-route has-anchor">
-						{ __( 'Edit link or button as HTML, then copy/modify this attributes', 'ekiline-modal' ) }
-						<pre class="wp-block-preformatted m-0 p-1">
-							href="{ '#' + attributes.anchor }" data-bs-toggle="modal"  data-bs-target="{ '#' + attributes.anchor }"
+						<pre>
+						{ __( 'Hint: include these attributes in links to open or close this modal (advanced).', 'ekiline-modal' ) }
+						<br/>
+							Open modal: <span>href="{ '#' + attributes.anchor }" data-bs-target="{ '#' + attributes.anchor }" data-bs-toggle="modal"</span>
+						<br/>
+							Close modal: <span>href="{ '#' + attributes.anchor }" data-bs-dismiss="modal"</span>
 						</pre>
 					</div>
 					)

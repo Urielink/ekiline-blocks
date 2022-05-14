@@ -29,11 +29,17 @@
 	padding-bottom: 10px;
 }
 
-.editor-modal-route{
-	background-color: #000000;
-	color:#fff;
+.editor-modal-route:not(.has-anchor){
+	background-color:#000;
+	color: #fff;
 	padding: 5px;
+	margin: 0px;
 }
+
 .editor-modal-route.has-anchor{
-	background-color: var(--wp-admin-theme-color);
+	background-color: #efefef;
+}
+.editor-modal-route pre{
+	margin-bottom: 0px !important;
+	padding: 10px;
 }
