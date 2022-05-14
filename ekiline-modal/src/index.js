@@ -167,7 +167,10 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			if ( attributes.anchor ){
 				return(
 					<div class="editor-modal-route has-anchor">
-						{ __( 'Use anchor in links to open/close modal. Anchor link: #', 'ekiline-modal' ) + attributes.anchor }
+						{ __( 'Edit link or button as HTML, then copy/modify this attributes', 'ekiline-modal' ) }
+						<pre class="wp-block-preformatted m-0 p-1">
+							href="{ '#' + attributes.anchor }" data-bs-toggle="modal"  data-bs-target="{ '#' + attributes.anchor }"
+						</pre>
 					</div>
 					)
 			}
@@ -526,131 +529,7 @@ registerBlockCollection( 'ekiline-blocks', {
  * @see https://developer.wordpress.org/block-editor/reference-guides/filters/block-filters/#editor-blocklistblock
  * nuevo experimento
  * @see https://jeffreycarandang.com/extending-gutenberg-core-blocks-with-custom-attributes-and-controls/
+ * nuevo, LinkControl.
+ * @see https://wp-gb.com/linkcontrol/
  */
 
-/**
- * External Dependencies
- */
- import classnames from 'classnames';
-
- /**
-  * WordPress Dependencies
-  */
-// import { __ } from '@wordpress/i18n';
-import { addFilter } from '@wordpress/hooks';
-import { Fragment } from '@wordpress/element';
-import { InspectorAdvancedControls } from '@wordpress/block-editor';
-import { createHigherOrderComponent } from '@wordpress/compose';
-// import { ToggleControl } from '@wordpress/components';
-
-//restrict to specific block names
-const allowedBlocks = [ 'core/button' ];
-
-/**
- * Add custom attribute for mobile visibility.
- *
- * @param {Object} settings Settings for the block.
- *
- * @return {Object} settings Modified settings.
- */
-function addAttributes( settings ) {
-
-	//check if object exists for old Gutenberg version compatibility
-	//add allowedBlocks restriction
-	if( typeof settings.attributes !== 'undefined' && allowedBlocks.includes( settings.name ) ){
-
-		settings.attributes = Object.assign( settings.attributes, {
-			visibleOnMobile:{
-				type: 'boolean',
-				default: true,
-			}
-		});
-
-	}
-
-	return settings;
-}
-
-/**
- * Add mobile visibility controls on Advanced Block Panel.
- *
- * @param {function} BlockEdit Block edit component.
- *
- * @return {function} BlockEdit Modified block edit component.
- */
-const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
-	return ( props ) => {
-
-		const {
-			name,
-			attributes,
-			setAttributes,
-			isSelected,
-		} = props;
-
-		const {
-			visibleOnMobile,
-		} = attributes;
-
-		return (
-			<Fragment>
-				<BlockEdit {...props} />
-				{/* add allowedBlocks restriction */}
-				{ isSelected && allowedBlocks.includes( name ) &&
-					<InspectorAdvancedControls>
-						<ToggleControl
-							label={ __( 'Link to modal window?', 'ekiline-modal'  ) }
-							checked={ !! visibleOnMobile }
-							onChange={ () => setAttributes( {  visibleOnMobile: ! visibleOnMobile } ) }
-							help={ !! visibleOnMobile ? __( 'Yes.', 'ekiline-modal'  ) : __( 'No.', 'ekiline-modal'  ) }
-						/>
-					</InspectorAdvancedControls>
-				}
-
-			</Fragment>
-		);
-	};
-}, 'withAdvancedControls');
-
-/**
- * Add custom element class in save element.
- *
- * @param {Object} extraProps     Block element.
- * @param {Object} blockType      Blocks object.
- * @param {Object} attributes     Blocks attributes.
- *
- * @return {Object} extraProps Modified block element.
- */
-function applyExtraClass( extraProps, blockType, attributes ) {
-
-	const { visibleOnMobile } = attributes;
-
-	//check if attribute exists for old Gutenberg version compatibility
-	//add class only when visibleOnMobile = false
-	//add allowedBlocks restriction
-	if ( typeof visibleOnMobile !== 'undefined' && !visibleOnMobile && allowedBlocks.includes( blockType.name ) ) {
-		extraProps.className = classnames( extraProps.className, 'mobile-hidden bg-warning' );
-	}
-
-	return extraProps;
-}
-
-//add filters
-
-addFilter(
-	'blocks.registerBlockType',
-	'editorskit/custom-attributes',
-	addAttributes
-);
-
-addFilter(
-	'editor.BlockEdit',
-	'editorskit/custom-advanced-control',
-	withAdvancedControls
-);
-
-addFilter(
-	'blocks.getSaveContent.extraProps',
-	'editorskit/applyExtraClass',
-	applyExtraClass
-);
