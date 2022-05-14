@@ -544,7 +544,7 @@ import { createHigherOrderComponent } from '@wordpress/compose';
 // import { ToggleControl } from '@wordpress/components';
 
 //restrict to specific block names
-const allowedBlocks = [ 'core/button' ];
+const allowedBlocks = [ 'core/paragraph', 'core/heading' ];
 
 /**
  * Add custom attribute for mobile visibility.
@@ -599,10 +599,10 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 				{ isSelected && allowedBlocks.includes( name ) &&
 					<InspectorAdvancedControls>
 						<ToggleControl
-							label={ __( 'Link to modal window?', 'ekiline-modal'  ) }
+							label={ __( 'Mobile Devices Visibity' ) }
 							checked={ !! visibleOnMobile }
 							onChange={ () => setAttributes( {  visibleOnMobile: ! visibleOnMobile } ) }
-							help={ !! visibleOnMobile ? __( 'Yes.', 'ekiline-modal'  ) : __( 'No.', 'ekiline-modal'  ) }
+							help={ !! visibleOnMobile ? __( 'Showing on mobile devices.' ) : __( 'Hidden on mobile devices.' ) }
 						/>
 					</InspectorAdvancedControls>
 				}

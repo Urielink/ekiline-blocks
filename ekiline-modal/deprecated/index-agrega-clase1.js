@@ -528,38 +528,27 @@ registerBlockCollection( 'ekiline-blocks', {
  * @see https://jeffreycarandang.com/extending-gutenberg-core-blocks-with-custom-attributes-and-controls/
  */
 
+
 /**
- * External Dependencies
+ * Dependencias.
+ * WordPress Dependencies
  */
- import classnames from 'classnames';
-
- /**
-  * WordPress Dependencies
-  */
-// import { __ } from '@wordpress/i18n';
 import { addFilter } from '@wordpress/hooks';
-import { Fragment } from '@wordpress/element';
-import { InspectorAdvancedControls } from '@wordpress/block-editor';
-import { createHigherOrderComponent } from '@wordpress/compose';
-// import { ToggleControl } from '@wordpress/components';
-
-//restrict to specific block names
-const allowedBlocks = [ 'core/button' ];
+// const { addFilter } = wp.hooks;
 
 /**
+ * Registrar un bloque.
  * Add custom attribute for mobile visibility.
- *
  * @param {Object} settings Settings for the block.
- *
  * @return {Object} settings Modified settings.
  */
 function addAttributes( settings ) {
 
 	//check if object exists for old Gutenberg version compatibility
-	//add allowedBlocks restriction
-	if( typeof settings.attributes !== 'undefined' && allowedBlocks.includes( settings.name ) ){
+	if( typeof settings.attributes !== 'undefined' ){
 
 		settings.attributes = Object.assign( settings.attributes, {
+			// nombre de atributo.
 			visibleOnMobile:{
 				type: 'boolean',
 				default: true,
@@ -570,6 +559,27 @@ function addAttributes( settings ) {
 
 	return settings;
 }
+
+addFilter(
+	'blocks.registerBlockType',
+	'editorskit/custom-attributes', // nombre plugin/bloque
+	addAttributes
+);
+
+/**
+ * Crear el control, que administrará el atributo.
+ * WordPress Dependencies
+ */
+// const { __ } = wp.i18n;
+// const { addFilter } = wp.hooks;
+// const { Fragment }	= wp.element;
+// const { InspectorAdvancedControls }	= wp.editor;
+// const { createHigherOrderComponent } = wp.compose;
+// const { ToggleControl } = wp.components;
+import { Fragment } from '@wordpress/element';
+import { InspectorAdvancedControls } from '@wordpress/block-editor';
+import { createHigherOrderComponent } from '@wordpress/compose';
+
 
 /**
  * Add mobile visibility controls on Advanced Block Panel.
@@ -582,7 +592,6 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 	return ( props ) => {
 
 		const {
-			name,
 			attributes,
 			setAttributes,
 			isSelected,
@@ -595,14 +604,13 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 		return (
 			<Fragment>
 				<BlockEdit {...props} />
-				{/* add allowedBlocks restriction */}
-				{ isSelected && allowedBlocks.includes( name ) &&
+				{ isSelected &&
 					<InspectorAdvancedControls>
 						<ToggleControl
-							label={ __( 'Link to modal window?', 'ekiline-modal'  ) }
+							label={ __( 'Mobile Devices Visibity' ) }
 							checked={ !! visibleOnMobile }
 							onChange={ () => setAttributes( {  visibleOnMobile: ! visibleOnMobile } ) }
-							help={ !! visibleOnMobile ? __( 'Yes.', 'ekiline-modal'  ) : __( 'No.', 'ekiline-modal'  ) }
+							help={ !! visibleOnMobile ? __( 'Showing on mobile devices.' ) : __( 'Hidden on mobile devices.' ) }
 						/>
 					</InspectorAdvancedControls>
 				}
@@ -612,45 +620,42 @@ const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
 	};
 }, 'withAdvancedControls');
 
-/**
- * Add custom element class in save element.
- *
- * @param {Object} extraProps     Block element.
- * @param {Object} blockType      Blocks object.
- * @param {Object} attributes     Blocks attributes.
- *
- * @return {Object} extraProps Modified block element.
- */
-function applyExtraClass( extraProps, blockType, attributes ) {
-
-	const { visibleOnMobile } = attributes;
-
-	//check if attribute exists for old Gutenberg version compatibility
-	//add class only when visibleOnMobile = false
-	//add allowedBlocks restriction
-	if ( typeof visibleOnMobile !== 'undefined' && !visibleOnMobile && allowedBlocks.includes( blockType.name ) ) {
-		extraProps.className = classnames( extraProps.className, 'mobile-hidden bg-warning' );
-	}
-
-	return extraProps;
-}
-
-//add filters
-
-addFilter(
-	'blocks.registerBlockType',
-	'editorskit/custom-attributes',
-	addAttributes
-);
-
 addFilter(
 	'editor.BlockEdit',
 	'editorskit/custom-advanced-control',
 	withAdvancedControls
 );
 
-addFilter(
-	'blocks.getSaveContent.extraProps',
-	'editorskit/applyExtraClass',
-	applyExtraClass
-);
+/**
+ * aplicar en el marcado
+ * External Dependencies
+ */
+ import classnames from 'classnames';
+
+ /**
+  * Add custom element class in save element.
+  *
+  * @param {Object} extraProps     Block element.
+  * @param {Object} blockType      Blocks object.
+  * @param {Object} attributes     Blocks attributes.
+  *
+  * @return {Object} extraProps Modified block element.
+  */
+ function applyExtraClass( extraProps, blockType, attributes ) {
+ 
+	 const { visibleOnMobile } = attributes;
+	 
+	 //check if attribute exists for old Gutenberg version compatibility
+	 //add class only when visibleOnMobile = false
+	 if ( typeof visibleOnMobile !== 'undefined' && !visibleOnMobile ) {
+		 extraProps.className = classnames( extraProps.className, 'mobile-hidden bg-dark' );
+	 }
+ 
+	 return extraProps;
+ }
+ 
+ addFilter(
+	 'blocks.getSaveContent.extraProps',
+	 'editorskit/applyExtraClass',
+	 applyExtraClass
+ );
