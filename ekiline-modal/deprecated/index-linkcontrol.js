@@ -533,57 +533,105 @@ registerBlockCollection( 'ekiline-blocks', {
  * @see https://jeffreycarandang.com/extending-gutenberg-core-blocks-with-custom-attributes-and-controls/
  * nuevo, LinkControl.
  * @see https://wp-gb.com/linkcontrol/
- * prueba, como formato extra
- * @see https://developer.wordpress.org/block-editor/how-to-guides/format-api/
- * Este ejemplo trae parametros que no estan en la doc.
- * @see https://jeffreycarandang.com/how-to-create-custom-text-formats-for-gutenberg-block-editor/
  */
 
-import { registerFormatType, toggleFormat } from '@wordpress/rich-text';
-import { RichTextToolbarButton } from '@wordpress/block-editor';
-import { useSelect } from '@wordpress/data';
 
-function ConditionalButton( { isActive, onChange, value } ) {
-	
-	const selectedBlock = useSelect( ( select ) => {
-		return select( 'core/block-editor' ).getSelectedBlock();
-	}, [] );
+//  import { registerBlockType } from '@wordpress/blocks';
+//  import { __ } from '@wordpress/i18n';
+ import {
+	//  useBlockProps,
+	 __experimentalLinkControl as LinkControl
+ } from '@wordpress/block-editor';
 
-	if ( selectedBlock && selectedBlock.name !== ( 'core/button' || 'core/buttons' ) ) {
-		return null;
-	}
+//styles that make it look good in the editor
+import './editor.scss';
 
-	return (
-		<RichTextToolbarButton
-			icon="editor-code"
-			title="Open modal link"
-			onClick={ () => {
-				onChange(
-					toggleFormat( value, {
-						type: 'ekiline-custom-format/open-modal-link',
-						attributes: {
-							// style: 'text-decoration: underline;',
-							'data-bs-toggle' : 'modal',
-							'data-bs-target' : '#link',
-							'type' : 'button',
-						},
-					} )
-				);
-			} }
-			isActive={ isActive }
-		/>
-	);
-}
+const BLOCKNAME = "link-control";
+const BLOCKPATH = `wp-gb/${BLOCKNAME}`;
 
-registerFormatType( 'ekiline-custom-format/open-modal-link', {
-	title: 'Open modal link',
-	tagName: 'samp',
-	className: null,
+registerBlockType( BLOCKPATH, {
+	apiVersion: 2,
+	title: __( BLOCKNAME.replace("-", " ").toUpperCase(), 'wp-gb' ),
+	description: __( 'The description' ),
+	category: 'wp-gb',
+	icon: 'smiley',
 	attributes: {
-		// style: 'style',
-		'data-bs-toggle' : null,
-		'data-bs-target' : null,
-		'type' : null,
+		post: {
+			type: "object",
+		}
 	},
-	edit: ConditionalButton,
+
+	edit: ( {attributes, setAttributes} ) => {
+		return (
+			<div { ...useBlockProps() }>
+				<LinkControl
+					searchInputPlaceholder="Search here..."
+					value={ attributes.post }
+					settings={[
+						{
+							id: 'opensInNewTab',
+							title: 'New tab?',
+						},
+						{
+							id: 'openModalLink',
+							title: 'Open modal link?'
+						},
+						{
+							id: 'closeModalLink',
+							title: 'Close modal link?'
+						}
+
+					]}
+					onChange={ ( newPost ) => setAttributes( { post: newPost } ) }
+					withCreateSuggestion={true}
+					createSuggestion={ (inputValue) => setAttributes( { post: {
+						...attributes.post,
+						title: inputValue,
+						type: "custom-url",
+						id: Date.now(),
+						url: inputValue,
+					} } ) }
+					createSuggestionButtonText={ (newValue) => `${__("New:")} ${newValue}` }
+				>
+				</LinkControl>
+			</div>
+		)
+	},
+
+	save: ( { attributes } ) => {
+
+		// Clases y atributos auxiliares, incluir save.
+		// const blockProps = useBlockProps.save( {
+		// 	className:
+		// 		'group-modal modal fade'
+		// 		+ ( attributes.modalShow != 'default' ? attributes.modalShow : '' )
+		// 	,
+		// 	'data-bs-backdrop' : attributes.modalBackdrop,
+		// 	'data-bs-keyboard' : attributes.modalKeyboard,
+		// } );
+
+		return (
+			<div {...attributes.post}>
+				<a
+					href={attributes.post.url}
+					// data-bs-toggle={'modal'}
+					data-bs-toggle={
+						( attributes.post.openModalLink ) ? 'modal' : null
+					}
+					data-bs-target={
+						( attributes.post.openModalLink ) ? attributes.post.url : null
+					}
+					data-bs-dismiss={
+						( attributes.post.closeModalLink ) ? 'modal' : null
+					}
+					type={
+						( attributes.post.openModalLink || attributes.post.closeModalLink ) ? 'button' : ( attributes.post.openModalLink || attributes.post.closeModalLink )
+					}
+				>
+					{ attributes.post.url }
+				</a>
+			</div>
+		);
+	},
+
 } );
