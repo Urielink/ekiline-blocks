@@ -107,10 +107,6 @@ function detectar_widget(){
 
 
 
-
-
-
-
 /**
  * Prueba render block cambiar contenido tampoco.
  * @https://developer.wordpress.org/reference/hooks/render_block/
@@ -120,3 +116,20 @@ function detectar_widget(){
  * Otra prueba.
  * https://florianbrinkmann.com/en/display-specific-gutenberg-blocks-of-a-post-outside-of-the-post-content-in-the-theme-5620/
  */
+
+
+/**
+ * Ejecutar el modal con js.
+ */
+function shootmodal(){
+	$script = '
+	<script type="text/javascript">
+	var myModal = new bootstrap.Modal(document.getElementById("nuevoModal"), {});
+	document.onreadystatechange = function () {
+	  myModal.show();
+	};
+	</script>
+	';
+	echo $script;
+}
+add_action( 'wp_footer', 'shootmodal', 100 );

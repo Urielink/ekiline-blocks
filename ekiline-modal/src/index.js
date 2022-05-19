@@ -96,14 +96,6 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			type: 'boolean',
 			default: true, // center.
 		},
-		modalHeader: {
-			type: 'boolean',
-			default: false,
-		},
-		modalFooter: {
-			type: 'boolean',
-			default: false,
-		},
 		modalBackdrop: {
 			type: 'boolean',
 			default: true, // cerrar modal dando clic fuera.
@@ -168,11 +160,9 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 				return(
 					<div class="editor-modal-route has-anchor">
 						<pre>
-						{ __( 'Hint: include these attributes in links to open or close this modal (advanced).', 'ekiline-modal' ) }
-						<br/>
-							Open modal: <span>href="{ '#' + attributes.anchor }" data-bs-target="{ '#' + attributes.anchor }" data-bs-toggle="modal"</span>
-						<br/>
-							Close modal: <span>href="{ '#' + attributes.anchor }" data-bs-dismiss="modal"</span>
+						{ '#' + attributes.anchor }
+						<br></br>
+						{ __( 'Add this #anchor to a button and its advanced options.', 'ekiline-modal' ) }
 						</pre>
 					</div>
 					)
@@ -225,20 +215,6 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 						checked={ attributes.modalAlign }
 						onChange={ ( modalAlign ) =>
 							setAttributes( { modalAlign } )
-						}
-					/>
-					<ToggleControl
-						label={ __( 'Hide header', 'ekiline-modal' ) }
-						checked={ attributes.modalHeader }
-						onChange={ ( modalHeader ) =>
-							setAttributes( { modalHeader } )
-						}
-					/>
-					<ToggleControl
-						label={ __( 'Hide footer', 'ekiline-modal' ) }
-						checked={ attributes.modalFooter }
-						onChange={ ( modalFooter ) =>
-							setAttributes( { modalFooter } )
 						}
 					/>
 					<ToggleControl
@@ -571,6 +547,11 @@ function addAttributesBtn( settings ) {
 				type: 'string',
 				default: '',
 			},
+			// Nuevo: Cerrar modal
+			closeModal:{
+				type: 'boolean',
+				default: true,
+			}
 		});
 
 	}
@@ -587,6 +568,10 @@ function addAttributesBtn( settings ) {
 const withAdvancedControlsBtn = createHigherOrderComponent( ( BlockEdit ) => {
 	return ( props ) => {
 
+		// Nuevo: Cerrar modal
+		const{ attributes, setAttributes } = props;
+		const{ closeModal } = attributes;
+
 		if( allowedBlocks.includes( props.name ) ){
 
 			return (
@@ -599,6 +584,13 @@ const withAdvancedControlsBtn = createHigherOrderComponent( ( BlockEdit ) => {
 								label={ __( 'Modal anchor for execute it.', 'ekiline-modal'  ) }
 								value={props.attributes.addDataBtn}
 								onChange={newData => props.setAttributes({addDataBtn: newData})}
+							/>
+							{/* Nuevo: Cerrar modal */}
+							<ToggleControl
+								label={ __( 'Close modal button.', 'ekiline-modal'  ) }
+								checked={ ! closeModal }
+								onChange={ () => setAttributes( {  closeModal: ! closeModal } ) }
+								help={ ! closeModal ? __( 'Yes.', 'ekiline-modal'  ) : __( 'No.', 'ekiline-modal'  ) }
 							/>
 						</InspectorAdvancedControls>
 					)}
@@ -621,9 +613,13 @@ const withAdvancedControlsBtn = createHigherOrderComponent( ( BlockEdit ) => {
  */
 function applyExtraClassBtn( element, block, attributes ) {
 
+	// Nuevo: Cerrar modal, sobrescribe los atributos.
+	const { closeModal } = attributes;
+
 	if( allowedBlocks.includes( block.name ) ){
 
-		if(attributes.addDataBtn && attributes.url) {
+		if( attributes.addDataBtn && attributes.url && closeModal ) {
+
 			return wp.element.cloneElement(
 				element,
 				{},
@@ -638,6 +634,21 @@ function applyExtraClassBtn( element, block, attributes ) {
 			);
 		}
 
+		if ( !closeModal && attributes.addDataBtn && attributes.url ) {
+
+			return wp.element.cloneElement(
+				element,
+				{},
+				wp.element.cloneElement(
+					element.props.children,
+					{
+						'data-bs-dismiss': 'modal',
+					}
+				)
+			);
+
+		}
+		
 	}
 	return element;
 }
