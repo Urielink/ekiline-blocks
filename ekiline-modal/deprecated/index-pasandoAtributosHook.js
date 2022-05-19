@@ -537,118 +537,132 @@ registerBlockCollection( 'ekiline-blocks', {
  * @see https://developer.wordpress.org/block-editor/how-to-guides/format-api/
  * Este ejemplo trae parametros que no estan en la doc.
  * @see https://jeffreycarandang.com/how-to-create-custom-text-formats-for-gutenberg-block-editor/
+ * Prueba nueva uso de Hooks.
+ * hya que instalar: npm install @wordpress/hooks --save
+ * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-hooks/
  */
 
+
+ /**
+  * WordPress Dependencies
+  */
+// import { __ } from '@wordpress/i18n'; // textos.
+import { addFilter } from '@wordpress/hooks'; // este permite crear filtros.
+import { Fragment } from '@wordpress/element'; // UI.
+import { InspectorAdvancedControls } from '@wordpress/block-editor'; // UI.
+import { createHigherOrderComponent } from '@wordpress/compose'; // UI.
+// import { ToggleControl } from '@wordpress/components'; // UI.
+
+//restrict to specific block names
+const allowedBlocks = [ 'core/button', 'core/buttons' ];
+
 /**
-import { registerFormatType, toggleFormat } from '@wordpress/rich-text';
-import { RichTextToolbarButton } from '@wordpress/block-editor';
-import { useSelect } from '@wordpress/data';
+ * Add custom attribute for mobile visibility.
+ *
+ * @param {Object} settings Settings for the block.
+ *
+ * @return {Object} settings Modified settings.
+ */
+function addAttributes( settings ) {
 
-function ConditionalButton( { isActive, onChange, value } ) {
-	
-	const selectedBlock = useSelect( ( select ) => {
-		return select( 'core/block-editor' ).getSelectedBlock();
-	}, [] );
+	//check if object exists for old Gutenberg version compatibility
+	//add allowedBlocks restriction
+	if( typeof settings.attributes !== 'undefined' && allowedBlocks.includes( settings.name ) ){
 
-	if ( selectedBlock && selectedBlock.name !== ( 'core/button' || 'core/buttons' ) ) {
-		return null;
+		settings.attributes = Object.assign( settings.attributes, {
+			openModal:{
+				type: 'boolean',
+				default: true,
+			}
+		});
+
 	}
 
-	return (
-		<RichTextToolbarButton
-			icon="editor-code"
-			title="Open modal link"
-			onClick={ () => {
-				onChange(
-					toggleFormat( value, {
-						type: 'ekiline-custom-format/open-modal-link',
-						attributes: {
-							// style: 'text-decoration: underline;',
-							'data-bs-toggle' : 'modal',
-							'data-bs-target' : '#link',
-							'type' : 'button',
-						},
-					} )
-				);
-			} }
-			isActive={ isActive }
-		/>
-	);
+	return settings;
 }
 
-registerFormatType( 'ekiline-custom-format/open-modal-link', {
-	title: 'Open modal link',
-	tagName: 'samp',
-	className: null,
-	attributes: {
-		// style: 'style',
-		'data-bs-toggle' : null,
-		'data-bs-target' : null,
-		'type' : null,
-	},
-	edit: ConditionalButton,
-} );
-**/
+/**
+ * Add mobile visibility controls on Advanced Block Panel.
+ *
+ * @param {function} BlockEdit Block edit component.
+ *
+ * @return {function} BlockEdit Modified block edit component.
+ */
+const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
+	return ( props ) => {
 
+		const {
+			name,
+			attributes,
+			setAttributes,
+			isSelected,
+		} = props;
 
+		const {
+			openModal,
+		} = attributes;
 
-/// Mejorado.
-import { registerFormatType, toggleFormat } from '@wordpress/rich-text';
-import { RichTextToolbarButton } from '@wordpress/block-editor';
-import { useSelect } from '@wordpress/data';
+		return (
+			<Fragment>
+				<BlockEdit {...props} />
+				{/* add allowedBlocks restriction */}
+				{ isSelected && allowedBlocks.includes( name ) &&
+					<InspectorAdvancedControls>
+						<ToggleControl
+							label={ __( 'Link to modal window?', 'ekiline-modal'  ) }
+							checked={ ! openModal }
+							onChange={ () => setAttributes( {  openModal: ! openModal } ) }
+							help={ ! openModal ? __( 'Yes.', 'ekiline-modal'  ) : __( 'No.', 'ekiline-modal'  ) }
+						/>
+					</InspectorAdvancedControls>
+				}
 
+			</Fragment>
+		);
+	};
+}, 'withAdvancedControls');
 
-function ConditionalButton( { isActive, onChange, value } ) {
+/**
+ * Add custom element class in save element.
+ *
+ * @param {Object} extraProps     Block element.
+ * @param {Object} blockType      Blocks object.
+ * @param {Object} attributes     Blocks attributes.
+ *
+ * @return {Object} extraProps Modified block element.
+ */
+function applyExtraClass( extraProps, blockType, attributes ) {
 
-	const selectedBlock = useSelect( ( select ) => {
-		return select( 'core/block-editor' ).getSelectedBlock();
-	}, [] );
+	const { openModal } = attributes;
 
-	// Permitir más bloques.
-	// if ( selectedBlock && selectedBlock.name !== 'core/paragraph' ) {
-	// 	return null;
-	// }
-
-	// console.log(selectedBlock.name)
-
-	const allowedBlocks = [ 'core/paragraph', 'core/button' ];
-
-	if ( selectedBlock && !allowedBlocks.includes( selectedBlock.name ) ) {
-		return null;
+	//check if attribute exists for old Gutenberg version compatibility
+	//add class only when visibleOnMobile = false
+	//add allowedBlocks restriction
+	if ( typeof openModal !== 'undefined' && !openModal && allowedBlocks.includes( blockType.name ) ) {
+		extraProps['data-bs-toggle'] = 'modal'; // ok Siii!!!!.
+		extraProps['data-bs-target'] = '#link'; // ok Siii!!!!.
+		extraProps['type'] = 'button'; // ok Siii!!!!.
 	}
 
-	return (
-		<RichTextToolbarButton
-			icon="editor-code"
-			title="Open modal link"
-			onClick={ () => {
-				onChange(
-					toggleFormat( value, {
-						type: 'ekiline-custom-format/open-modal-link',
-						attributes: {
-							// style: 'text-decoration: underline;',
-							'data-bs-toggle' : 'modal',
-							'data-bs-target' : '#link',
-							'type' : 'button',
-						},
-					} )
-				);
-			} }
-			isActive={ isActive }
-		/>
-	);
+	return extraProps;
 }
 
-registerFormatType( 'ekiline-custom-format/open-modal-link', {
-	title: 'Open modal link',
-	tagName: 'button',
-	className: null,
-	attributes: {
-		// style: 'style',
-		'data-bs-toggle' : null,
-		'data-bs-target' : null,
-		'type' : null,
-	},
-	edit: ConditionalButton,
-} );
+//add filters
 
+addFilter(
+	'blocks.registerBlockType',
+	'editorskit/custom-attributes',
+	addAttributes
+);
+
+addFilter(
+	'editor.BlockEdit',
+	'editorskit/custom-advanced-control',
+	withAdvancedControls
+);
+
+addFilter(
+	'blocks.getSaveContent.extraProps',
+	'editorskit/applyExtraClass',
+	applyExtraClass
+);

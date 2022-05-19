@@ -5,7 +5,7 @@
  */
 import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, InnerBlocks, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, SelectControl, ToggleControl } from '@wordpress/components';
+import { PanelBody, SelectControl, ToggleControl, TextControl } from '@wordpress/components';
 
 /**
  * Retrieves the translation of text.
@@ -540,149 +540,122 @@ registerBlockCollection( 'ekiline-blocks', {
  * Prueba nueva uso de Hooks.
  * hya que instalar: npm install @wordpress/hooks --save
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-hooks/
+ * Prueba con otra inforamcion, es la mejor!!
+ * @see https://chap.website/adding-a-custom-attribute-to-gutenberg-block/
  */
 
-/**
- * External Dependencies
- */
- import classnames from 'classnames';
 
  /**
-  * WordPress Dependencies
+  * Importar otras dependencias de WP.
   */
-// import { __ } from '@wordpress/i18n';
-import { addFilter } from '@wordpress/hooks';
-import { Fragment } from '@wordpress/element';
-import { InspectorAdvancedControls } from '@wordpress/block-editor';
-import { createHigherOrderComponent } from '@wordpress/compose';
-// import { ToggleControl } from '@wordpress/components';
+import { addFilter } from '@wordpress/hooks'; // este permite crear filtros.
+import { Fragment } from '@wordpress/element'; // UI.
+import { InspectorAdvancedControls } from '@wordpress/block-editor'; // UI.
+import { createHigherOrderComponent } from '@wordpress/compose'; // UI.
 
-//restrict to specific block names
+// Restringir el uso a botones.
 const allowedBlocks = [ 'core/button', 'core/buttons' ];
 
 /**
- * Add custom attribute for mobile visibility.
- *
- * @param {Object} settings Settings for the block.
- *
- * @return {Object} settings Modified settings.
+ * Asignar nuevos valores.
+ * @param {*} settings Valores nuevos a incluir
+ * @returns Deveulve los valores modificados.
  */
-function addAttributes( settings ) {
+function addAttributesBtn( settings ) {
 
-	//check if object exists for old Gutenberg version compatibility
-	//add allowedBlocks restriction
-	if( typeof settings.attributes !== 'undefined' && allowedBlocks.includes( settings.name ) ){
+	//Restriccion
+	if( allowedBlocks.includes( settings.name ) ){
 
 		settings.attributes = Object.assign( settings.attributes, {
-			visibleOnMobile:{
-				type: 'boolean',
-				default: true,
+			addDataBtn: {
+				type: 'string',
+				default: '',
 			},
-			openModal:{
-				type: 'boolean',
-				default: true,
-			}
 		});
 
 	}
 
 	return settings;
 }
-
 /**
- * Add mobile visibility controls on Advanced Block Panel.
+ * Control para los nuevos valore del boton.
  *
- * @param {function} BlockEdit Block edit component.
+ * @param {function} BlockEdit componente WP.
  *
- * @return {function} BlockEdit Modified block edit component.
+ * @return {function} Devuelve el BlockEdit modificado.
  */
-const withAdvancedControls = createHigherOrderComponent( ( BlockEdit ) => {
+const withAdvancedControlsBtn = createHigherOrderComponent( ( BlockEdit ) => {
 	return ( props ) => {
 
-		const {
-			name,
-			attributes,
-			setAttributes,
-			isSelected,
-		} = props;
+		if( allowedBlocks.includes( props.name ) ){
 
-		const {
-			visibleOnMobile,
-			openModal,
-		} = attributes;
+			return (
 
-		return (
-			<Fragment>
+				<Fragment>
 				<BlockEdit {...props} />
-				{/* add allowedBlocks restriction */}
-				{ isSelected && allowedBlocks.includes( name ) &&
-					<InspectorAdvancedControls>
-						<ToggleControl
-							label={ __( 'Link to modal window?', 'ekiline-modal'  ) }
-							checked={ ! visibleOnMobile }
-							onChange={ () => setAttributes( {  visibleOnMobile: ! visibleOnMobile } ) }
-							help={ ! visibleOnMobile ? __( 'Yes.', 'ekiline-modal'  ) : __( 'No.', 'ekiline-modal'  ) }
-						/>
-						<ToggleControl
-							label={ __( 'Link to modal window?', 'ekiline-modal'  ) }
-							checked={ ! openModal }
-							onChange={ () => setAttributes( {  openModal: ! openModal } ) }
-							help={ ! openModal ? __( 'Yes.', 'ekiline-modal'  ) : __( 'No.', 'ekiline-modal'  ) }
-						/>
-					</InspectorAdvancedControls>
-				}
+					{props.attributes.url && (
+						<InspectorAdvancedControls>
+							<TextControl
+								label={ __( 'Modal anchor for execute it.', 'ekiline-modal'  ) }
+								value={props.attributes.addDataBtn}
+								onChange={newData => props.setAttributes({addDataBtn: newData})}
+							/>
+						</InspectorAdvancedControls>
+					)}
+				</Fragment>
+			);
 
-			</Fragment>
-		);
+		}
+		return <BlockEdit {...props} />;
 	};
-}, 'withAdvancedControls');
+}, 'withAdvancedControlsBtn');
 
 /**
- * Add custom element class in save element.
+ * Guardar el nuevo valor, en este caso como atributo.
  *
- * @param {Object} extraProps     Block element.
- * @param {Object} blockType      Blocks object.
- * @param {Object} attributes     Blocks attributes.
+ * @param {Object} element      Elemento a seleccionar.
+ * @param {Object} block        El bloque a modificar.
+ * @param {Object} attributes   Los atributos del bloque.
  *
- * @return {Object} extraProps Modified block element.
+ * @return {Object} Devuelve los nuevos atributos al bloque.
  */
-function applyExtraClass( extraProps, blockType, attributes ) {
+function applyExtraClassBtn( element, block, attributes ) {
 
-	const { visibleOnMobile, openModal } = attributes;
+	if( allowedBlocks.includes( block.name ) ){
 
-	//check if attribute exists for old Gutenberg version compatibility
-	//add class only when visibleOnMobile = false
-	//add allowedBlocks restriction
-	if ( typeof visibleOnMobile !== 'undefined' && !visibleOnMobile && allowedBlocks.includes( blockType.name ) ) {
-		extraProps.className = classnames( extraProps.className, 'mobile-hidden bg-warning' );
+		if(attributes.addDataBtn && attributes.url) {
+			return wp.element.cloneElement(
+				element,
+				{},
+				wp.element.cloneElement(
+					element.props.children,
+					{
+						'data-bs-target': attributes.addDataBtn,
+						'data-bs-toggle': 'modal',
+						'type': 'button',
+					}
+				)
+			);
+		}
+
 	}
-	if ( typeof openModal !== 'undefined' && !openModal && allowedBlocks.includes( blockType.name ) ) {
-		// extraProps.openModal = {'data-bs-toggle':'modal'};
-		// extraProps = {'data-bs-toggle':'modal'}; // ok a medias.
-		extraProps['data-bs-toggle'] = 'modal'; // ok Siii!!!!.
-		extraProps['data-bs-target'] = '#link'; // ok Siii!!!!.
-		extraProps['type'] = 'button'; // ok Siii!!!!.
-	}
-
-	return extraProps;
+	return element;
 }
-
-//add filters
 
 addFilter(
 	'blocks.registerBlockType',
-	'editorskit/custom-attributes',
-	addAttributes
+	'ekilineModalBtnData/relAttribute',
+	addAttributesBtn
 );
 
 addFilter(
 	'editor.BlockEdit',
-	'editorskit/custom-advanced-control',
-	withAdvancedControls
+	'ekilineModalBtnData/relInput',
+	withAdvancedControlsBtn
 );
 
 addFilter(
-	'blocks.getSaveContent.extraProps',
-	'editorskit/applyExtraClass',
-	applyExtraClass
+	'blocks.getSaveElement',
+	'ekilineModalBtnData/rel',
+	applyExtraClassBtn
 );
