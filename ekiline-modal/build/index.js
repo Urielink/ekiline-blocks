@@ -751,9 +751,9 @@ function applyExtraClassBtn(element, block, attributes) {
   return element;
 }
 
-(0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_7__.addFilter)('blocks.registerBlockType', 'ekilineModalBtnData/relAttribute', addAttributesBtn);
-(0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_7__.addFilter)('editor.BlockEdit', 'ekilineModalBtnData/relInput', withAdvancedControlsBtn);
-(0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_7__.addFilter)('blocks.getSaveElement', 'ekilineModalBtnData/rel', applyExtraClassBtn);
+(0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_7__.addFilter)('blocks.registerBlockType', 'ekilineModalBtnData/dataAttribute', addAttributesBtn);
+(0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_7__.addFilter)('editor.BlockEdit', 'ekilineModalBtnData/dataInput', withAdvancedControlsBtn);
+(0,_wordpress_hooks__WEBPACK_IMPORTED_MODULE_7__.addFilter)('blocks.getSaveElement', 'ekilineModalBtnData/dataModified', applyExtraClassBtn);
 }();
 /******/ })()
 ;

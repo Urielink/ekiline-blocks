@@ -644,18 +644,18 @@ function applyExtraClassBtn( element, block, attributes ) {
 
 addFilter(
 	'blocks.registerBlockType',
-	'ekilineModalBtnData/relAttribute',
+	'ekilineModalBtnData/dataAttribute',
 	addAttributesBtn
 );
 
 addFilter(
 	'editor.BlockEdit',
-	'ekilineModalBtnData/relInput',
+	'ekilineModalBtnData/dataInput',
 	withAdvancedControlsBtn
 );
 
 addFilter(
 	'blocks.getSaveElement',
-	'ekilineModalBtnData/rel',
+	'ekilineModalBtnData/dataModified',
 	applyExtraClassBtn
 );
