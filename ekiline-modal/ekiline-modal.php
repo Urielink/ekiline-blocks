@@ -54,6 +54,7 @@ function wpdocs_display_post_ekiline_modal_block() {
 				// break; // imprime solo uno y continua.
 			}
 		}
+
 	}
 }
 add_action( 'wp_footer', 'wpdocs_display_post_ekiline_modal_block', 0 );
@@ -132,4 +133,34 @@ function shootmodal(){
 	';
 	echo $script;
 }
-add_action( 'wp_footer', 'shootmodal', 100 );
+// add_action( 'wp_footer', 'shootmodal', 100 );
+
+function shootmodaltime(){
+	// $script = '
+	?>
+	<script type="text/javascript">
+function ekiline_launch_modal(){
+	document.querySelectorAll('[data-ek-time]')
+		.forEach(function (modalNode) {
+
+			var modalData = modalNode.dataset.ekTime;
+			console.log(modalData);
+
+			var myModal = new bootstrap.Modal(modalNode, {});
+
+			setTimeout(
+				function() {
+					myModal.show();
+				},
+				// tiempo.
+				modalData
+				);
+		});
+}
+ekiline_launch_modal();
+	</script>
+	<?php
+	// ';
+	// echo $script;
+}
+add_action( 'wp_footer', 'shootmodaltime', 100 );

@@ -110,7 +110,7 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 		},
 		modalTime: {
 			type: 'number',
-			default: '5000',
+			default: 0,
 		},
 	},
 
@@ -238,6 +238,19 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 							setAttributes( { modalGrow } )
 						}
 					/>
+					<TextControl
+						label={ __( 'Show with timer', 'ekiline-modal' ) }
+						type="number"
+						value={ attributes.modalTime }
+						onChange={ ( newval ) =>
+							setAttributes( { modalTime: parseInt( newval ) } )
+						}
+						help={
+							( attributes.modalTime > 0 )
+							? __( 'Run after page load "' + attributes.modalTime + '" milliseconds.', 'ekiline-modal' )
+							: __( '"' + attributes.modalTime + '" do nothing.', 'ekiline-modal' )
+						}
+					/>
 
 					</PanelBody>
 				</InspectorControls>
@@ -268,6 +281,7 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			,
 			'data-bs-backdrop' : attributes.modalBackdrop,
 			'data-bs-keyboard' : attributes.modalKeyboard,
+			'data-ek-time'   : ( attributes.modalTime || null ),
 		} );
 
 		const dialogProps = useBlockProps.save({
