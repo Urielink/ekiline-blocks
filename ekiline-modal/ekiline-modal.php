@@ -37,7 +37,7 @@ function wpdocs_display_post_ekiline_modal_block() {
 
 	// necesita ser definido si el bloque esta en una publicacion, le afecta en el admin.
 	// if ( is_singular() && in_the_loop() && is_main_query() ) {
-		if ( !is_admin() && is_singular() ){
+	if ( !is_admin() && is_singular() ){
 
 		if ( has_filter( 'the_content', 'remove_blocks' ) ){
 			// echo 'remove_blocks() is active<br>';
@@ -54,7 +54,6 @@ function wpdocs_display_post_ekiline_modal_block() {
 				// break; // imprime solo uno y continua.
 			}
 		}
-
 	}
 }
 add_action( 'wp_footer', 'wpdocs_display_post_ekiline_modal_block', 0 );
@@ -139,23 +138,42 @@ function shootmodaltime(){
 	// $script = '
 	?>
 	<script type="text/javascript">
-function ekiline_launch_modal(){
-	document.querySelectorAll('[data-ek-time]')
-		.forEach(function (modalNode) {
 
-			var modalData = modalNode.dataset.ekTime;
-			console.log(modalData);
-
-			var myModal = new bootstrap.Modal(modalNode, {});
-
-			setTimeout(
-				function() {
-					myModal.show();
-				},
-				// tiempo.
-				modalData
-				);
+// Cerrar una ventana modal si está abierta.
+function ekiline_close_modal(){
+	// Bucar un modal abierto.
+	const ventanasAbiertas = document.querySelectorAll('.modal.show');
+	// Si existe cerrar con click.
+	if(0!==ventanasAbiertas.length){
+		ventanasAbiertas.forEach(function(el){
+			el.click();
 		});
+	}
+}
+
+function ekiline_launch_modal(){
+
+	const modalProgramado = document.querySelectorAll('[data-ek-time]');
+
+	modalProgramado.forEach(function (modalItem) {
+		// Modal programado.
+		const nuevoModal = new bootstrap.Modal(modalItem, {});
+		// Tiempo de lanzado.
+		const modalData = modalItem.dataset.ekTime;
+
+		setTimeout(
+			function() {
+				// Si existe un modal abierto, cerrar.
+				ekiline_close_modal();
+				// Despues de cerrar, mostrar.
+				nuevoModal.show();
+			},
+			// tiempo.
+			modalData
+		);
+
+	});
+
 }
 ekiline_launch_modal();
 	</script>
@@ -164,3 +182,40 @@ ekiline_launch_modal();
 	// echo $script;
 }
 add_action( 'wp_footer', 'shootmodaltime', 100 );
+
+
+
+// /**
+//  * 04-20-22 Optimización:
+//  * JS para ads, v3 compuesta: en caso de no exisir google_gtagjs.
+//  * 
+//  * @link https://developer.wordpress.org/reference/functions/wp_script_is/
+//  */
+// function ekiline_ads_scripts() {
+// 	// Si no esta el plugin de google, registra el mio.
+// 	$script_handle = 'google_gtagjs';
+// 	$script_src    = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4635273343535805';
+// 	if ( ! wp_script_is( $script_handle, 'enqueued' ) ) {
+// 		$script_handle = $script_handle . '_custom';
+// 		wp_register_script( $script_handle, $script_src, array(), '1', true );
+// 		wp_enqueue_script( $script_handle );
+// 	}
+// 	wp_add_inline_script( $script_handle, ekiline_ads_scripts_code(), 'after' );
+// }
+// add_action( 'wp_enqueue_scripts', 'ekiline_ads_scripts', 100 );
+
+// /**
+//  * Código JS complementario.
+//  * Afecta al marcado de los banners, dependen de la clase css .adsbygoogle.
+//  */
+// function ekiline_ads_scripts_code() {
+// 	$code_ads = '
+// 	const gAds = document.querySelectorAll(".adsbygoogle");
+// 	if ( gAds ){
+// 		gAds.forEach(element => {
+// 			( adsbygoogle = window.adsbygoogle || []).push({} );
+// 		});
+// 	}
+// 	';
+// 	return $code_ads;
+// }
