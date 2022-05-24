@@ -29,6 +29,11 @@ add_action( 'init', 'ekiline_blocks_ekiline_modal_block_init' );
 /**
  * Prueba, intentar mover el contenido de un bloque al final de la pagina con PHP.
  * https://developer.wordpress.org/reference/functions/parse_blocks/
+ * Prueba render block cambiar contenido tampoco.
+ * @https://developer.wordpress.org/reference/hooks/render_block/
+ * Otra prueba.
+ * https://florianbrinkmann.com/en/display-specific-gutenberg-blocks-of-a-post-outside-of-the-post-content-in-the-theme-5620/
+ * Falta extender esta funcion para los widgets.
  */
 function wpdocs_display_post_ekiline_modal_block() {
 
@@ -38,7 +43,6 @@ function wpdocs_display_post_ekiline_modal_block() {
 	// necesita ser definido si el bloque esta en una publicacion, le afecta en el admin.
 	// if ( is_singular() && in_the_loop() && is_main_query() ) {
 	if ( !is_admin() && is_singular() ){
-
 		if ( has_filter( 'the_content', 'remove_blocks' ) ){
 			// echo 'remove_blocks() is active<br>';
 			remove_filter( 'the_content', 'remove_blocks');
@@ -79,70 +83,33 @@ function remove_blocks() {
 add_filter( 'the_content', 'remove_blocks');
 
 
-
 /**
- * Detectar si un bloque esta en funcionamineto.
- * @link https://wordpress.stackexchange.com/questions/392493/find-if-widget-block-is-active
+ * Javascript en linea para modal.
+ *
+ * @link https://developer.wordpress.org/reference/functions/wp_script_is/
  */
-function is_active_block_widget_wpse( $blockname ){
-	$widget_blocks = get_option( 'widget_block' );
-	foreach( (array) $widget_blocks as $widget_block ) {
-		if ( ! empty( $widget_block['content'] )
-			&& has_block( $blockname, $widget_block['content'] )
-		) {
-			return true;
-		}
+
+function ekiline_block_modal_inline_script() {
+	// Condición para mostrar js en front.
+	if ( !is_admin() && is_singular() && ! has_block( 'ekiline-blocks/ekiline-modal' ) ) {
+		return;
 	}
-	return false;
+	// Si existe Ekiline Theme, apoyar de su manejador, o ocupar nuevo manejador.
+	$script_handle = ( wp_script_is( 'ekiline-layout', 'enqueued' ) ) ? 'ekiline-layout' : 'ekiline-blocks-inline' ;
+	wp_add_inline_script( $script_handle, ekiline_block_modal_scripts_code(), 'after' );
 }
-
-function detectar_widget(){
-	// Funcion para detectar widget.
-	$resultado = is_active_block_widget_wpse( 'ekiline-blocks/ekiline-modal' );
-	if ( true === $resultado ){
-		echo 'widget activo';
-	}
-}
-// add_action( 'wp_footer', 'detectar_widget', 0 );
-
-
+add_action( 'wp_enqueue_scripts', 'ekiline_block_modal_inline_script', 100 );
 
 /**
- * Prueba render block cambiar contenido tampoco.
- * @https://developer.wordpress.org/reference/hooks/render_block/
+ * Código JS complementario.
+ * Afecta al marcado de los banners, dependen de la clase css .adsbygoogle.
  */
-
-/**
- * Otra prueba.
- * https://florianbrinkmann.com/en/display-specific-gutenberg-blocks-of-a-post-outside-of-the-post-content-in-the-theme-5620/
- */
-
-
-/**
- * Ejecutar el modal con js.
- */
-function shootmodal(){
-	$script = '
-	<script type="text/javascript">
-	var myModal = new bootstrap.Modal(document.getElementById("nuevoModal"), {});
-	document.onreadystatechange = function () {
-	  myModal.show();
-	};
-	</script>
-	';
-	echo $script;
-}
-// add_action( 'wp_footer', 'shootmodal', 100 );
-
-function shootmodaltime(){
-	// $script = '
-	?>
-	<script type="text/javascript">
-
+function ekiline_block_modal_scripts_code() {
+$code = '
 // Cerrar una ventana modal si está abierta.
 function ekiline_close_modal(){
 	// Bucar un modal abierto.
-	const ventanasAbiertas = document.querySelectorAll('.modal.show');
+	const ventanasAbiertas = document.querySelectorAll(\'.modal.show\');
 	// Si existe cerrar con click.
 	if(0!==ventanasAbiertas.length){
 		ventanasAbiertas.forEach(function(el){
@@ -150,72 +117,31 @@ function ekiline_close_modal(){
 		});
 	}
 }
-
+// Abrir un modal programado.
 function ekiline_launch_modal(){
-
-	const modalProgramado = document.querySelectorAll('[data-ek-time]');
-
-	modalProgramado.forEach(function (modalItem) {
-		// Modal programado.
-		const nuevoModal = new bootstrap.Modal(modalItem, {});
-		// Tiempo de lanzado.
-		const modalData = modalItem.dataset.ekTime;
-
-		setTimeout(
-			function() {
-				// Si existe un modal abierto, cerrar.
-				ekiline_close_modal();
-				// Despues de cerrar, mostrar.
-				nuevoModal.show();
-			},
-			// tiempo.
-			modalData
-		);
-
-	});
-
+	// Bucar un modal programado.
+	const modalProgramado = document.querySelectorAll(\'[data-ek-time]\');
+	// Si existe ejecutar.
+	if(0!==modalProgramado.length){
+		modalProgramado.forEach(function (modalItem) {
+			// Modal programado.
+			const nuevoModal = new bootstrap.Modal(modalItem, {});
+			// Tiempo de lanzado.
+			const modalData = modalItem.dataset.ekTime;
+			setTimeout(
+				function() {
+					// Si existe un modal abierto, cerrar.
+					ekiline_close_modal();
+					// Despues de cerrar, mostrar.
+					nuevoModal.show();
+				},
+				// tiempo.
+				modalData
+			);
+		});
+	}
 }
 ekiline_launch_modal();
-	</script>
-	<?php
-	// ';
-	// echo $script;
+';
+return $code;
 }
-add_action( 'wp_footer', 'shootmodaltime', 100 );
-
-
-
-// /**
-//  * 04-20-22 Optimización:
-//  * JS para ads, v3 compuesta: en caso de no exisir google_gtagjs.
-//  * 
-//  * @link https://developer.wordpress.org/reference/functions/wp_script_is/
-//  */
-// function ekiline_ads_scripts() {
-// 	// Si no esta el plugin de google, registra el mio.
-// 	$script_handle = 'google_gtagjs';
-// 	$script_src    = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4635273343535805';
-// 	if ( ! wp_script_is( $script_handle, 'enqueued' ) ) {
-// 		$script_handle = $script_handle . '_custom';
-// 		wp_register_script( $script_handle, $script_src, array(), '1', true );
-// 		wp_enqueue_script( $script_handle );
-// 	}
-// 	wp_add_inline_script( $script_handle, ekiline_ads_scripts_code(), 'after' );
-// }
-// add_action( 'wp_enqueue_scripts', 'ekiline_ads_scripts', 100 );
-
-// /**
-//  * Código JS complementario.
-//  * Afecta al marcado de los banners, dependen de la clase css .adsbygoogle.
-//  */
-// function ekiline_ads_scripts_code() {
-// 	$code_ads = '
-// 	const gAds = document.querySelectorAll(".adsbygoogle");
-// 	if ( gAds ){
-// 		gAds.forEach(element => {
-// 			( adsbygoogle = window.adsbygoogle || []).push({} );
-// 		});
-// 	}
-// 	';
-// 	return $code_ads;
-// }
