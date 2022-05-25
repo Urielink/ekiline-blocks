@@ -35,7 +35,7 @@ add_action( 'init', 'ekiline_blocks_ekiline_modal_block_init' );
  * https://florianbrinkmann.com/en/display-specific-gutenberg-blocks-of-a-post-outside-of-the-post-content-in-the-theme-5620/
  * Falta extender esta funcion para los widgets.
  */
-function wpdocs_display_post_ekiline_modal_block() {
+function ekiline_block_modal_find_and_move() {
 
 	// global $post;
 	// print_r($post);
@@ -60,7 +60,7 @@ function wpdocs_display_post_ekiline_modal_block() {
 		}
 	}
 }
-add_action( 'wp_footer', 'wpdocs_display_post_ekiline_modal_block', 0 );
+add_action( 'wp_footer', 'ekiline_block_modal_find_and_move', 0 );
 
 
 //If single block exists on page or post don't show it with the other blocks

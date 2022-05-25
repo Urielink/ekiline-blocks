@@ -662,7 +662,7 @@ function applyExtraClassBtn( element, block, attributes ) {
 			);
 
 		}
-		
+
 	}
 	return element;
 }
