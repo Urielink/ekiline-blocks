@@ -642,7 +642,7 @@ function applyExtraClassBtn( element, block, attributes ) {
 					{
 						'data-bs-target': attributes.addDataBtn,
 						'data-bs-toggle': 'modal',
-						'type': 'button',
+						// 'type': 'button',
 					}
 				)
 			);
