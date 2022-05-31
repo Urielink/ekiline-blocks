@@ -67,13 +67,6 @@ registerBlockType('ekiline-blocks/ekiline-accordion', {
 			default: false, // add classname .accordion-flush.
 		},
 	},
-	/**
-	 * Se ocupara contexto para pasar valores.
-	 * @link https://developer.wordpress.org/block-editor/reference-guides/block-api/block-context/
-	 */
-	providesContext: {
-		'ekiline-accordion/anchor': 'anchor',
-	},
 
 	/**
 	 * @see ./edit.js
@@ -91,18 +84,10 @@ registerBlockType('ekiline-blocks/ekiline-accordion', {
 			[ 'ekiline-blocks/ekiline-accordion-item' ]
 		];
 
-		// Personalizar clase.
+		// personalizar clase
 		const blockProps = useBlockProps( {
 			className: 'group-accordion',
 		} );
-
-		// Precargar nombre ID.
-		if( !attributes.anchor ){
-			function getRandomArbitrary(min, max) {
-				return Math.floor(Math.random() * (max - min) + min);
-			}
-			setAttributes( { anchor: 'accordion' + getRandomArbitrary(10,150) } )
-		}
 
 		return (
 			<div { ...blockProps }>
@@ -119,11 +104,9 @@ registerBlockType('ekiline-blocks/ekiline-accordion', {
 					</PanelBody>
 				</InspectorControls>
 				{/* El bloque */}
-				<div class="espacio">
 				<InnerBlocks
 					allowedBlocks={ PARENT_ALLOWED_BLOCKS }
 					template={ CHILD_TEMPLATE }/>
-				</div>
 			</div>
 		)
 	},
@@ -161,12 +144,12 @@ registerBlockType('ekiline-blocks/ekiline-accordion-item', {
 	 icon: 'menu-alt',
 	 description: __( 'Set tittle and content in your accordion container', 'ekiline-accordion' ),
 	 category: 'design',
-	 //Se ocupa contexto para pasar valores desde el padre, en este caso el ID.
-	 usesContext: ['ekiline-accordion/anchor'],
 	 supports: {
 		anchor: true,
 		html: false,
 		reusable: false,
+		// multiple: false,
+		// inserter: false,
 	},
 	 attributes:{
 		showDefault: {
@@ -175,7 +158,7 @@ registerBlockType('ekiline-blocks/ekiline-accordion-item', {
 		},
 		keepOpen: {
 			type: 'boolean',
-			default: true, // remove dataset [data-bs-parent].
+			default: false, // remove dataset [data-bs-parent].
 		},
 		parentId: {
 			type: 'string',
@@ -207,47 +190,31 @@ registerBlockType('ekiline-blocks/ekiline-accordion-item', {
 			className: 'child-item-accordion',
 		} );
 
-		// Precargar nombre ID en hijos.
-		if( !attributes.anchor ){
-			function getRandomArbitrary(min, max) {
-				return Math.floor(Math.random() * (max - min) + min);
-			}
-			setAttributes( { anchor: 'accordionChild' + getRandomArbitrary(10,150) } )
-		}
-
-		// Precargar nombre de ID Padre en objetos internos.
-		if( !attributes.parentId || ( attributes.parentId !== props.context['ekiline-accordion/anchor'] )  ){
-			setAttributes( { parentId: props.context['ekiline-accordion/anchor'] } )
-		}
-
 		return (
 			<div { ...blockProps }>
 				{/* Inspector controles */}
 				<InspectorControls>
 					<PanelBody title={ __( 'Accordion Item Params', 'ekiline-accordion' ) } initialOpen={ true }>
-					{/* Control de prueba, no es necesario mostrarlo. */}
-					{/* <TextControl
+					<TextControl
 						label={ __( 'Parent Anchor', 'ekiline-accordion' ) }
 						value={ attributes.parentId }
 						onChange={ ( newval ) =>
 							setAttributes( { parentId: newval } )
 						}
-						hideLabelFromVision={true}
-					/> */}
+					/>
 					<ToggleControl
-						label={ __( 'Show element by default.', 'ekiline-accordion' ) }
+						label={ __( 'Show default.', 'ekiline-accordion' ) }
 						checked={ attributes.showDefault }
 						onChange={ ( showDefault ) =>
 							setAttributes( { showDefault } )
 						}
 					/>
 					<ToggleControl
-						label={ __( 'Toggle.', 'ekiline-accordion' ) }
+						label={ __( 'Keep item always open.', 'ekiline-accordion' ) }
 						checked={ attributes.keepOpen }
 						onChange={ ( keepOpen ) =>
 							setAttributes( { keepOpen } )
 						}
-						help={__('Close previously active accordion elements.', 'ekiline-accordion')}
 					/>
 					</PanelBody>
 				</InspectorControls>
@@ -280,13 +247,14 @@ registerBlockType('ekiline-blocks/ekiline-accordion-item', {
 		} );
 
 		const itemBlockProps = useBlockProps.save( {
-			headingId: (!blockProps.id)?null:'heading' + blockProps.id,
-			itemId: (!blockProps.id)?null:'item' + blockProps.id,
+			headingId: 'heading' + blockProps.id,
+			itemId: 'item' + blockProps.id,
 			itemClassName: ( !attributes.showDefault ? 'accordion-collapse collapse' : 'accordion-collapse collapse show' ),
 		} );
 
 		return (
 			<div { ...blockProps }>
+				{/* <h2 class="accordion-header" id="headingOne"> */}
 				<h2 class="accordion-header"
 					id={ itemBlockProps.headingId }
 				>
@@ -296,12 +264,18 @@ registerBlockType('ekiline-blocks/ekiline-accordion-item', {
 						type="button"
 						value={ attributes.content }
 						data-bs-toggle="collapse"
-						data-bs-target={ (itemBlockProps.itemId)?'#' + itemBlockProps.itemId:null }
+						// data-bs-target="#collapseOne" //el div del contenido.
+						data-bs-target={ '#' + itemBlockProps.itemId } //el div del contenido.
+						// aria-expanded="true"
+						// aria-controls="collapseOne"
 					/>
 				</h2>
 				<div
+					// id="collapseOne"
 					id={ itemBlockProps.itemId }
+					// class="accordion-collapse collapse show"
 					className={ itemBlockProps.itemClassName }
+					// aria-labelledby="headingOne"
 					data-bs-parent={ (attributes.keepOpen && attributes.parentId)?'#' + attributes.parentId:null }
 				>
 					<InnerBlocks.Content />
@@ -314,6 +288,8 @@ registerBlockType('ekiline-blocks/ekiline-accordion-item', {
 
 });
 
+
+
 /**
  * Incorporar bloques a coleccion.
  */
@@ -322,3 +298,65 @@ registerBlockType('ekiline-blocks/ekiline-accordion-item', {
 	 title: 'Ekiline Blocks',
 	 icon: 'layout',
  } );
+
+
+
+ function AccordeonBootstrap(){
+	return(
+		<div class="accordion" id="accordionExample">
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="headingOne">
+					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						{__( 'Accordion Item #1', 'ekiline-accordion' )}
+					</button>
+				</h2>
+				<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+					<div class="accordion-body">
+						{__( 'Lorem Item Text #1', 'ekiline-accordion' )}
+					</div>
+				</div>
+			</div>
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="headingTwo">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						{__( 'Accordion Item #2', 'ekiline-accordion' )}
+					</button>
+				</h2>
+				<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+					<div class="accordion-body">
+						{__( 'Lorem Item Text #2', 'ekiline-accordion' )}
+					</div>
+				</div>
+			</div>
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="headingThree">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+						{__( 'Accordion Item #3', 'ekiline-accordion' )}
+					</button>
+				</h2>
+				<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+					<div class="accordion-body">
+						{__( 'Lorem Item Text #3', 'ekiline-accordion' )}
+					</div>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+function AccordeonBootstrapItem(){
+	return(
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="headingOne">
+				<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+					{__( 'Accordion Item #1', 'ekiline-accordion' )}
+				</button>
+			</h2>
+			<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+				<div class="accordion-body">
+					{__( 'Lorem Item Text #1', 'ekiline-accordion' )}
+				</div>
+			</div>
+		</div>
+	)
+}

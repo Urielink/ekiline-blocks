@@ -5,7 +5,7 @@
  */
 import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, InnerBlocks, InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, SelectControl, ToggleControl, TextControl } from '@wordpress/components';
+import { PanelBody, SelectControl, ToggleControl } from '@wordpress/components';
 
 /**
  * Retrieves the translation of text.
@@ -96,6 +96,14 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			type: 'boolean',
 			default: true, // center.
 		},
+		modalHeader: {
+			type: 'boolean',
+			default: false,
+		},
+		modalFooter: {
+			type: 'boolean',
+			default: false,
+		},
 		modalBackdrop: {
 			type: 'boolean',
 			default: true, // cerrar modal dando clic fuera.
@@ -110,7 +118,7 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 		},
 		modalTime: {
 			type: 'number',
-			default: 0,
+			default: '5000',
 		},
 	},
 
@@ -160,9 +168,11 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 				return(
 					<div class="editor-modal-route has-anchor">
 						<pre>
-						{ '#' + attributes.anchor }
-						<br></br>
-						{ __( 'Add this #anchor to a button and its advanced options.', 'ekiline-modal' ) }
+						{ __( 'Hint: include these attributes in links to open or close this modal (advanced).', 'ekiline-modal' ) }
+						<br/>
+							Open modal: <span>href="{ '#' + attributes.anchor }" data-bs-target="{ '#' + attributes.anchor }" data-bs-toggle="modal"</span>
+						<br/>
+							Close modal: <span>href="{ '#' + attributes.anchor }" data-bs-dismiss="modal"</span>
 						</pre>
 					</div>
 					)
@@ -218,6 +228,20 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 						}
 					/>
 					<ToggleControl
+						label={ __( 'Hide header', 'ekiline-modal' ) }
+						checked={ attributes.modalHeader }
+						onChange={ ( modalHeader ) =>
+							setAttributes( { modalHeader } )
+						}
+					/>
+					<ToggleControl
+						label={ __( 'Hide footer', 'ekiline-modal' ) }
+						checked={ attributes.modalFooter }
+						onChange={ ( modalFooter ) =>
+							setAttributes( { modalFooter } )
+						}
+					/>
+					<ToggleControl
 						label={ __( 'Enable background click to close', 'ekiline-modal' ) }
 						checked={ attributes.modalBackdrop }
 						onChange={ ( modalBackdrop ) =>
@@ -236,19 +260,6 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 						checked={ attributes.modalGrow }
 						onChange={ ( modalGrow ) =>
 							setAttributes( { modalGrow } )
-						}
-					/>
-					<TextControl
-						label={ __( 'Show with timer', 'ekiline-modal' ) }
-						type="number"
-						value={ attributes.modalTime }
-						onChange={ ( newval ) =>
-							setAttributes( { modalTime: parseInt( newval ) } )
-						}
-						help={
-							( attributes.modalTime > 0 )
-							? __( 'Run after page load "' + attributes.modalTime + '" milliseconds.', 'ekiline-modal' )
-							: __( '"' + attributes.modalTime + '" do nothing.', 'ekiline-modal' )
 						}
 					/>
 
@@ -281,7 +292,6 @@ registerBlockType('ekiline-blocks/ekiline-modal', {
 			,
 			'data-bs-backdrop' : attributes.modalBackdrop,
 			'data-bs-keyboard' : attributes.modalKeyboard,
-			'data-ek-time'   : ( attributes.modalTime || null ),
 		} );
 
 		const dialogProps = useBlockProps.save({
@@ -527,160 +537,118 @@ registerBlockCollection( 'ekiline-blocks', {
  * @see https://developer.wordpress.org/block-editor/how-to-guides/format-api/
  * Este ejemplo trae parametros que no estan en la doc.
  * @see https://jeffreycarandang.com/how-to-create-custom-text-formats-for-gutenberg-block-editor/
- * Prueba nueva uso de Hooks.
- * hya que instalar: npm install @wordpress/hooks --save
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-hooks/
- * Prueba con otra inforamcion, es la mejor!!
- * @see https://chap.website/adding-a-custom-attribute-to-gutenberg-block/
  */
-
-
- /**
-  * Importar otras dependencias de WP.
-  */
-import { addFilter } from '@wordpress/hooks'; // este permite crear filtros.
-import { Fragment } from '@wordpress/element'; // UI.
-import { InspectorAdvancedControls } from '@wordpress/block-editor'; // UI.
-import { createHigherOrderComponent } from '@wordpress/compose'; // UI.
-
-// Restringir el uso a botones.
-const allowedBlocks = [ 'core/button', 'core/buttons' ];
 
 /**
- * Asignar nuevos valores.
- * @param {*} settings Valores nuevos a incluir
- * @returns Deveulve los valores modificados.
- */
-function addAttributesBtn( settings ) {
+import { registerFormatType, toggleFormat } from '@wordpress/rich-text';
+import { RichTextToolbarButton } from '@wordpress/block-editor';
+import { useSelect } from '@wordpress/data';
 
-	//Restriccion
-	if( allowedBlocks.includes( settings.name ) ){
+function ConditionalButton( { isActive, onChange, value } ) {
+	
+	const selectedBlock = useSelect( ( select ) => {
+		return select( 'core/block-editor' ).getSelectedBlock();
+	}, [] );
 
-		settings.attributes = Object.assign( settings.attributes, {
-			addDataBtn: {
-				type: 'string',
-				default: '',
-			},
-			// Nuevo: Cerrar modal
-			closeModal:{
-				type: 'boolean',
-				default: true,
-			}
-		});
-
+	if ( selectedBlock && selectedBlock.name !== ( 'core/button' || 'core/buttons' ) ) {
+		return null;
 	}
 
-	return settings;
+	return (
+		<RichTextToolbarButton
+			icon="editor-code"
+			title="Open modal link"
+			onClick={ () => {
+				onChange(
+					toggleFormat( value, {
+						type: 'ekiline-custom-format/open-modal-link',
+						attributes: {
+							// style: 'text-decoration: underline;',
+							'data-bs-toggle' : 'modal',
+							'data-bs-target' : '#link',
+							'type' : 'button',
+						},
+					} )
+				);
+			} }
+			isActive={ isActive }
+		/>
+	);
 }
-/**
- * Control para los nuevos valore del boton.
- *
- * @param {function} BlockEdit componente WP.
- *
- * @return {function} Devuelve el BlockEdit modificado.
- */
-const withAdvancedControlsBtn = createHigherOrderComponent( ( BlockEdit ) => {
-	return ( props ) => {
 
-		// Nuevo: Cerrar modal
-		const{ attributes, setAttributes } = props;
-		const{ closeModal } = attributes;
+registerFormatType( 'ekiline-custom-format/open-modal-link', {
+	title: 'Open modal link',
+	tagName: 'samp',
+	className: null,
+	attributes: {
+		// style: 'style',
+		'data-bs-toggle' : null,
+		'data-bs-target' : null,
+		'type' : null,
+	},
+	edit: ConditionalButton,
+} );
+**/
 
-		if( allowedBlocks.includes( props.name ) ){
 
-			return (
 
-				<Fragment>
-				<BlockEdit {...props} />
-					{props.attributes.url && (
-						<InspectorAdvancedControls>
-							<TextControl
-								label={ __( 'Modal anchor for execute it.', 'ekiline-modal'  ) }
-								value={props.attributes.addDataBtn}
-								onChange={newData => props.setAttributes({addDataBtn: newData})}
-							/>
-							{/* Nuevo: Cerrar modal */}
-							<ToggleControl
-								label={ __( 'Close modal button.', 'ekiline-modal'  ) }
-								checked={ ! closeModal }
-								onChange={ () => setAttributes( {  closeModal: ! closeModal } ) }
-								help={ ! closeModal ? __( 'Yes.', 'ekiline-modal'  ) : __( 'No.', 'ekiline-modal'  ) }
-							/>
-						</InspectorAdvancedControls>
-					)}
-				</Fragment>
-			);
+/// Mejorado.
+import { registerFormatType, toggleFormat } from '@wordpress/rich-text';
+import { RichTextToolbarButton } from '@wordpress/block-editor';
+import { useSelect } from '@wordpress/data';
 
-		}
-		return <BlockEdit {...props} />;
-	};
-}, 'withAdvancedControlsBtn');
 
-/**
- * Guardar el nuevo valor, en este caso como atributo.
- *
- * @param {Object} element      Elemento a seleccionar.
- * @param {Object} block        El bloque a modificar.
- * @param {Object} attributes   Los atributos del bloque.
- *
- * @return {Object} Devuelve los nuevos atributos al bloque.
- */
-function applyExtraClassBtn( element, block, attributes ) {
+function ConditionalButton( { isActive, onChange, value } ) {
 
-	// Nuevo: Cerrar modal, sobrescribe los atributos.
-	const { closeModal } = attributes;
+	const selectedBlock = useSelect( ( select ) => {
+		return select( 'core/block-editor' ).getSelectedBlock();
+	}, [] );
 
-	if( allowedBlocks.includes( block.name ) ){
+	// Permitir más bloques.
+	// if ( selectedBlock && selectedBlock.name !== 'core/paragraph' ) {
+	// 	return null;
+	// }
 
-		if( attributes.addDataBtn && attributes.url && closeModal ) {
+	// console.log(selectedBlock.name)
 
-			return wp.element.cloneElement(
-				element,
-				{},
-				wp.element.cloneElement(
-					element.props.children,
-					{
-						'data-bs-target': attributes.addDataBtn,
-						'data-bs-toggle': 'modal',
-						// 'type': 'button',
-					}
-				)
-			);
-		}
+	const allowedBlocks = [ 'core/paragraph', 'core/button' ];
 
-		if ( !closeModal && attributes.addDataBtn && attributes.url ) {
-
-			return wp.element.cloneElement(
-				element,
-				{},
-				wp.element.cloneElement(
-					element.props.children,
-					{
-						'data-bs-dismiss': 'modal',
-					}
-				)
-			);
-
-		}
-
+	if ( selectedBlock && !allowedBlocks.includes( selectedBlock.name ) ) {
+		return null;
 	}
-	return element;
+
+	return (
+		<RichTextToolbarButton
+			icon="editor-code"
+			title="Open modal link"
+			onClick={ () => {
+				onChange(
+					toggleFormat( value, {
+						type: 'ekiline-custom-format/open-modal-link',
+						attributes: {
+							// style: 'text-decoration: underline;',
+							'data-bs-toggle' : 'modal',
+							'data-bs-target' : '#link',
+							'type' : 'button',
+						},
+					} )
+				);
+			} }
+			isActive={ isActive }
+		/>
+	);
 }
 
-addFilter(
-	'blocks.registerBlockType',
-	'ekilineModalBtnData/dataAttribute',
-	addAttributesBtn
-);
+registerFormatType( 'ekiline-custom-format/open-modal-link', {
+	title: 'Open modal link',
+	tagName: 'button',
+	className: null,
+	attributes: {
+		// style: 'style',
+		'data-bs-toggle' : null,
+		'data-bs-target' : null,
+		'type' : null,
+	},
+	edit: ConditionalButton,
+} );
 
-addFilter(
-	'editor.BlockEdit',
-	'ekilineModalBtnData/dataInput',
-	withAdvancedControlsBtn
-);
-
-addFilter(
-	'blocks.getSaveElement',
-	'ekilineModalBtnData/dataModified',
-	applyExtraClassBtn
-);
