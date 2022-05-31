@@ -119,11 +119,11 @@ registerBlockType('ekiline-blocks/ekiline-accordion', {
 					</PanelBody>
 				</InspectorControls>
 				{/* El bloque */}
-				<div class="espacio">
+
 				<InnerBlocks
 					allowedBlocks={ PARENT_ALLOWED_BLOCKS }
 					template={ CHILD_TEMPLATE }/>
-				</div>
+
 			</div>
 		)
 	},
