@@ -5,7 +5,8 @@
  */
 
 .wp-block-ekiline-blocks-ekiline-progress {
-	border: 1px dotted #f00;
+	border: 1px solid #c9c9c9;
+	background-color: #e9ecef;
 }
 
 .wp-block-ekiline-blocks-ekiline-progress .block-editor-inner-blocks{
@@ -17,10 +18,12 @@
 	justify-content: flex-start;
 	align-content: stretch !important;
 	height:100%;
+	overflow: hidden;
 }
 
 .wp-block-ekiline-blocks-ekiline-progress .block-editor-block-list__layout > .wp-block {
-	border: 1px dotted gray;
+	border-right: 1px solid #c9c9c9;
+	background-color: rgba(173, 174, 175, 0.638);
 	margin: 0px;
 	max-width: 100% !important;
   }
@@ -30,4 +33,11 @@
 	width: 100% !important;
 	max-width: 100%;
 	height:100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+  }
+  .wp-block-ekiline-blocks-ekiline-progress .block-editor-block-list__layout > .wp-block > .wp-block.item-progress *{
+	  text-align: center;
+	  margin: 0;
   }

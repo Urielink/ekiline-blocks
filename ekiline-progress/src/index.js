@@ -86,7 +86,7 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 		const blockProps = useBlockProps( {
 			className: 'group-progress',
 			style:{
-				height: ( !attributes.progHeight ? 1 : attributes.progHeight )
+				height: attributes.progHeight + 'px',
 			}
 		} );
 
@@ -101,7 +101,7 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 							type="number"
 							value={ attributes.progHeight }
 							onChange={ ( newval ) =>
-								setAttributes( { progHeight: parseInt( newval ) } )
+								setAttributes( { progHeight: parseInt( ( !newval || '0'===newval )?1:newval ) } )
 							}
 							min="1"
 						/>
@@ -128,7 +128,7 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 		const blockProps = useBlockProps.save( {
 			className: 'progress',
 			style:{
-				height: ( !attributes.progHeight ? 1 : attributes.progHeight )
+				height: attributes.progHeight+'px',
 			}
 		} );
 
@@ -188,9 +188,10 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 
 		// Personalizar clase.
 		const blockProps = useBlockProps( {
-			className: 'item-progress',
+			className: 'item-progress progress-bar' + ( (attributes.progAnimation) ? ' progress-bar-animated' : '' ) + ( (attributes.progStripes) ? ' progress-bar-striped' : '' ),
+			// Se suple con un filtro en el editor (ver newWrapperAtts).
 			// style:{
-			// 	width: ( !attributes.progRange ? '1%' : attributes.progRange )+'%',
+			// 	width: attributes.progRange+'%',
 			// },
 		} );
 
@@ -204,7 +205,7 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 							type="number"
 							value={ attributes.progRange }
 							onChange={ ( newval ) =>
-								setAttributes( { progRange: parseInt( newval ) } )
+								setAttributes( { progRange: parseInt( ( !newval || '0'===newval )?1:newval ) } )
 							}
 							min="1"
 							max="100"
@@ -234,7 +235,7 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 				</InspectorControls>
 
 				{/* El bloque */}
-				{ attributes.progRange }
+				<p>{ attributes.progRange }</p>
 
 			</div>
 		)
@@ -248,9 +249,9 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 
 		// Clases y atributos auxiliares, incluir save.
 		const blockProps = useBlockProps.save( {
-			className: 'progress-bar' + ( (attributes.progAnimation) ? ' progress-bar-animated' : null ) + ( (attributes.progStripes) ? ' progress-bar-striped' : null ),
+			className: 'progress-bar' + ( (attributes.progAnimation) ? ' progress-bar-animated' : '' ) + ( (attributes.progStripes) ? ' progress-bar-striped' : '' ),
 			style:{
-				width: ( !attributes.progRange ? '1%' : attributes.progRange + '%' ),
+				width: attributes.progRange+'%',
 			},
 		} );
 
@@ -268,6 +269,8 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
  * Modificar envoltorio de editor para ver en tiempo real los cambios.
  * @link https://developer.wordpress.org/block-editor/reference-guides/filters/block-filters/
  * @link https://gist.github.com/tousignant-christopher/cd6d08c8145bb1866fd275fcb61890ca 
+ * Conocer atributos.
+ * console.log(props.name, props.attributes, props.attributes.progRange)
  */
 
 import { addFilter } from '@wordpress/hooks'; // este permite crear filtros.
@@ -276,30 +279,20 @@ import { createHigherOrderComponent } from '@wordpress/compose'; // UI.
 const newWrapperAtts = createHigherOrderComponent( ( BlockListBlock ) => {
 	return ( props ) => {
 
-		// console.log(props.name)
-		// console.log(props.attributes)
-		// console.log(props.attributes.progRange)
-
 		// Aplicar solo a bloque item progress.
 		if( props.name === 'ekiline-blocks/ekiline-progress-item' ){
 
-			// let wrapperProps = props.wrapperProps ? props.wrapperProps : {};
-			// wrapperProps.style = {
-			// 	// width: ( !props.attributes.progRange ? '1%' : props.attributes.progRange )+'%',
-			// 	width: ( !props.attributes.progRange ? null : props.attributes.progRange )+'%',
-			// }
-
+			// Hook para maniobrar (wrapperProps).
 			const wrapperProps = {
 				...props.wrapperProps,
 				style : {
-					width: ( !props.attributes.progRange ? '1%' : props.attributes.progRange )+'%',
+					width: props.attributes.progRange+'%',
 				},
 			};
 
 			return (
-				<BlockListBlock
-					{ ...props }
-					className={ 'apoyo block-' + props.clientId }
+				<BlockListBlock { ...props }
+					// className={ 'myfix-' + props.clientId }
 					wrapperProps={ wrapperProps }
 				/>
 			);
