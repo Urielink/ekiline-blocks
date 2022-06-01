@@ -56,12 +56,7 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 	  description: __( 'Show a bootstrap progress bar for your data.', 'ekiline-progress' ),
 	  category: 'design',
 	  supports: {
-			anchor: true,
-			color: { // Text UI control is enabled.
-				background: true, // Disable background UI control.
-				gradients: true, // Enable gradients UI control.
-				text: false // Enable gradients UI control.
-			},
+		  anchor: true,
 	  },
 	  attributes:{
 		progHeight: {
@@ -84,15 +79,22 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 
 		// Personalizar clase.
 		const blockProps = useBlockProps( {
-			className: 'group-progress',
+			className: 'group-progress bg-dark',
 			style:{
 				height: ( !attributes.progHeight ? 1 : attributes.progHeight )
 			}
 		} );
 
+		// Valores item.
+		const viewblockProps = useBlockProps( {
+			// className: 'progress',
+			// style:{
+			// 	height: ( !attributes.progHeight ? 1 : attributes.progHeight )
+			// }
+		} );
+
 		return (
 			<div { ...blockProps }>
-
 				{/* Inspector controles */}
 				<InspectorControls>
 					<PanelBody title={ __( 'Progress bar Settings', 'ekiline-progress' ) } initialOpen={ true }>
@@ -103,17 +105,16 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 							onChange={ ( newval ) =>
 								setAttributes( { progHeight: parseInt( newval ) } )
 							}
-							min="1"
 						/>
 					</PanelBody>
 				</InspectorControls>
-
 				{/* El bloque */}
-				<InnerBlocks
-					orientation="horizontal"
-					allowedBlocks={ PARENT_ALLOWED_BLOCKS }
-					template={ CHILD_TEMPLATE }/>
-
+				{/* <div { ...viewblockProps }> */}
+					<InnerBlocks
+						orientation="horizontal"
+						allowedBlocks={ PARENT_ALLOWED_BLOCKS }
+						template={ CHILD_TEMPLATE }/>
+				{/* </div> */}
 			</div>
 		)
 	},
@@ -152,17 +153,12 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 	  description: __( 'Progress data, could be multiple bars between 1 to 100.', 'ekiline-progress' ),
 	  category: 'design',
 	  supports: {
-		anchor: false,
-		color: { // Text UI control is enabled.
-			background: true, // Disable background UI control.
-			gradients: true, // Enable gradients UI control.
-			text: true // Enable gradients UI control.
-		},
+		  anchor: false,
 	  },
 	  attributes:{
 		progRange: {
 			type: 'number',
-			default: 10, // Rango o contador, 0 a 100 int.
+			default: 70, // Rango o contador, 0 a 100 int.
 		},
 		progLabel: {
 			type: 'boolean',
@@ -188,10 +184,20 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 
 		// Personalizar clase.
 		const blockProps = useBlockProps( {
-			className: 'item-progress',
-			// style:{
-			// 	width: ( !attributes.progRange ? '1%' : attributes.progRange )+'%',
-			// },
+			className: 'item-progress bg-primary',
+			style:{
+				width: ( !attributes.progRange ? '1%' : attributes.progRange )+'%',
+			},
+		} );
+
+		// Valores item.
+		const viewblockProps = useBlockProps( {
+			// className: 'progress-bar m-0',
+			style:{
+				width: ( !attributes.progRange ? '1%' : attributes.progRange )+'%',
+				// margin: '0px !important',
+			},
+			// role:'progressbar',
 		} );
 
 		return (
@@ -206,7 +212,7 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 							onChange={ ( newval ) =>
 								setAttributes( { progRange: parseInt( newval ) } )
 							}
-							min="1"
+							min="0"
 							max="100"
 						/>
 						<ToggleControl
@@ -232,10 +238,14 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 						/>
 					</PanelBody>
 				</InspectorControls>
-
 				{/* El bloque */}
-				{ attributes.progRange }
-
+				{/* <div {...viewblockProps}
+					// aria-valuenow="10" 
+					// aria-valuemin="0" 
+					// aria-valuemax="100"
+				> */}
+					{ (!attributes.progLabel) ? attributes.progRange : null }
+				{/* </div> */}
 			</div>
 		)
 	},
@@ -248,71 +258,29 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 
 		// Clases y atributos auxiliares, incluir save.
 		const blockProps = useBlockProps.save( {
-			className: 'progress-bar' + ( (attributes.progAnimation) ? ' progress-bar-animated' : null ) + ( (attributes.progStripes) ? ' progress-bar-striped' : null ),
+			className: 'progress-bar',
 			style:{
 				width: ( !attributes.progRange ? '1%' : attributes.progRange + '%' ),
 			},
 		} );
 
+		function setClassNames(){
+			const addName = 'progress-bar';
+			if ( attributes.progStripes ){
+				addName += ' progress-bar-striped';
+			}
+			if ( attributes.progAnimation ){
+				addName += ' progress-bar-animated';
+			}
+			return (addName);
+		}
+
 		return (
 			<div { ...blockProps }>
-				{ (!attributes.progLabel) ? attributes.progRange : null }
+				<InnerBlocks.Content />
 			</div>
 		)
 
 	},
 
 });
-
-/**
- * Modificar envoltorio de editor para ver en tiempo real los cambios.
- * @link https://developer.wordpress.org/block-editor/reference-guides/filters/block-filters/
- * @link https://gist.github.com/tousignant-christopher/cd6d08c8145bb1866fd275fcb61890ca 
- */
-
-import { addFilter } from '@wordpress/hooks'; // este permite crear filtros.
-import { createHigherOrderComponent } from '@wordpress/compose'; // UI.
-
-const newWrapperAtts = createHigherOrderComponent( ( BlockListBlock ) => {
-	return ( props ) => {
-
-		// console.log(props.name)
-		// console.log(props.attributes)
-		// console.log(props.attributes.progRange)
-
-		// Aplicar solo a bloque item progress.
-		if( props.name === 'ekiline-blocks/ekiline-progress-item' ){
-
-			// let wrapperProps = props.wrapperProps ? props.wrapperProps : {};
-			// wrapperProps.style = {
-			// 	// width: ( !props.attributes.progRange ? '1%' : props.attributes.progRange )+'%',
-			// 	width: ( !props.attributes.progRange ? null : props.attributes.progRange )+'%',
-			// }
-
-			const wrapperProps = {
-				...props.wrapperProps,
-				style : {
-					width: ( !props.attributes.progRange ? '1%' : props.attributes.progRange )+'%',
-				},
-			};
-
-			return (
-				<BlockListBlock
-					{ ...props }
-					className={ 'apoyo block-' + props.clientId }
-					wrapperProps={ wrapperProps }
-				/>
-			);
-
-		}
-
-		return ( <BlockListBlock { ...props } /> );
-
-	};
-}, 'newWrapperAtts');
-
-addFilter(
-	'editor.BlockListBlock',
-	'ekiline-blocks/ekiline-progress-item',
-	newWrapperAtts
-);

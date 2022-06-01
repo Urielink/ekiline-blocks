@@ -7,3 +7,27 @@
 .wp-block-ekiline-blocks-ekiline-progress {
 	border: 1px dotted #f00;
 }
+
+.wp-block-ekiline-blocks-ekiline-progress .block-editor-inner-blocks{
+	height:100%;
+}
+
+.wp-block-ekiline-blocks-ekiline-progress .block-editor-block-list__layout{
+	display: flex;
+	justify-content: flex-start;
+	align-content: stretch !important;
+	height:100%;
+}
+
+.wp-block-ekiline-blocks-ekiline-progress .block-editor-block-list__layout > .wp-block {
+	border: 1px dotted gray;
+	margin: 0px;
+	max-width: 100% !important;
+  }
+
+  .wp-block-ekiline-blocks-ekiline-progress .block-editor-block-list__layout > .wp-block > .wp-block.item-progress{
+	margin: 0px;
+	width: 100% !important;
+	max-width: 100%;
+	height:100%;
+  }
