@@ -52,7 +52,7 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 	  * @see: https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/ 
 	  */
 	  title: __( 'Ekiline progress, full control', 'ekiline-progress' ),
-	  icon: 'menu-alt',
+	  icon: 'ellipsis',
 	  description: __( 'Show a bootstrap progress bar for your data.', 'ekiline-progress' ),
 	  category: 'design',
 	  supports: {
@@ -86,7 +86,8 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 		const blockProps = useBlockProps( {
 			className: 'group-progress',
 			style:{
-				height: attributes.progHeight + 'px',
+				// 22 pixeles de padding para maniobrar.
+				height: (attributes.progHeight + 22) + 'px',
 			}
 		} );
 
@@ -148,7 +149,7 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
  registerBlockType('ekiline-blocks/ekiline-progress-item', {
 	  title: __( 'Progress data bar', 'ekiline-progress' ),
 	  parent: ['ekiline-blocks/ekiline-progress'],
-	  icon: 'menu-alt',
+	  icon: 'ellipsis',
 	  description: __( 'Progress data, could be multiple bars between 1 to 100.', 'ekiline-progress' ),
 	  category: 'design',
 	  supports: {
@@ -264,6 +265,15 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 	},
 
 });
+
+/**
+ * Incorporar bloques a coleccion.
+ */
+ import { registerBlockCollection } from '@wordpress/blocks';
+ registerBlockCollection( 'ekiline-blocks', {
+	 title: 'Ekiline Blocks',
+	 icon: 'layout',
+ } );
 
 /**
  * Modificar envoltorio de editor para ver en tiempo real los cambios.
