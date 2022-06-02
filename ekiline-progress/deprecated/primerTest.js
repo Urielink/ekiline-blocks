@@ -52,16 +52,11 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 	  * @see: https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/ 
 	  */
 	  title: __( 'Ekiline progress, full control', 'ekiline-progress' ),
-	  icon: 'ellipsis',
+	  icon: 'menu-alt',
 	  description: __( 'Show a bootstrap progress bar for your data.', 'ekiline-progress' ),
 	  category: 'design',
 	  supports: {
-			anchor: true,
-			color: { // Text UI control is enabled.
-				background: true, // Disable background UI control.
-				gradients: true, // Enable gradients UI control.
-				text: false // Enable gradients UI control.
-			},
+		  anchor: true,
 	  },
 	  attributes:{
 		progHeight: {
@@ -84,16 +79,22 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 
 		// Personalizar clase.
 		const blockProps = useBlockProps( {
-			className: 'group-progress',
+			className: 'group-progress bg-dark',
 			style:{
-				// 22 pixeles de padding para maniobrar.
-				height: (attributes.progHeight + 22) + 'px',
+				height: ( !attributes.progHeight ? 1 : attributes.progHeight )
 			}
+		} );
+
+		// Valores item.
+		const viewblockProps = useBlockProps( {
+			// className: 'progress',
+			// style:{
+			// 	height: ( !attributes.progHeight ? 1 : attributes.progHeight )
+			// }
 		} );
 
 		return (
 			<div { ...blockProps }>
-
 				{/* Inspector controles */}
 				<InspectorControls>
 					<PanelBody title={ __( 'Progress bar Settings', 'ekiline-progress' ) } initialOpen={ true }>
@@ -102,19 +103,18 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 							type="number"
 							value={ attributes.progHeight }
 							onChange={ ( newval ) =>
-								setAttributes( { progHeight: parseInt( ( !newval || '0'===newval )?1:newval ) } )
+								setAttributes( { progHeight: parseInt( newval ) } )
 							}
-							min="1"
 						/>
 					</PanelBody>
 				</InspectorControls>
-
 				{/* El bloque */}
-				<InnerBlocks
-					orientation="horizontal"
-					allowedBlocks={ PARENT_ALLOWED_BLOCKS }
-					template={ CHILD_TEMPLATE }/>
-
+				{/* <div { ...viewblockProps }> */}
+					<InnerBlocks
+						orientation="horizontal"
+						allowedBlocks={ PARENT_ALLOWED_BLOCKS }
+						template={ CHILD_TEMPLATE }/>
+				{/* </div> */}
 			</div>
 		)
 	},
@@ -129,7 +129,7 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 		const blockProps = useBlockProps.save( {
 			className: 'progress',
 			style:{
-				height: attributes.progHeight+'px',
+				height: ( !attributes.progHeight ? 1 : attributes.progHeight )
 			}
 		} );
 
@@ -149,21 +149,16 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
  registerBlockType('ekiline-blocks/ekiline-progress-item', {
 	  title: __( 'Progress data bar', 'ekiline-progress' ),
 	  parent: ['ekiline-blocks/ekiline-progress'],
-	  icon: 'ellipsis',
+	  icon: 'menu-alt',
 	  description: __( 'Progress data, could be multiple bars between 1 to 100.', 'ekiline-progress' ),
 	  category: 'design',
 	  supports: {
-		anchor: false,
-		color: { // Text UI control is enabled.
-			background: true, // Disable background UI control.
-			gradients: true, // Enable gradients UI control.
-			text: true // Enable gradients UI control.
-		},
+		  anchor: false,
 	  },
 	  attributes:{
 		progRange: {
 			type: 'number',
-			default: 10, // Rango o contador, 0 a 100 int.
+			default: 70, // Rango o contador, 0 a 100 int.
 		},
 		progLabel: {
 			type: 'boolean',
@@ -189,11 +184,20 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 
 		// Personalizar clase.
 		const blockProps = useBlockProps( {
-			className: 'item-progress progress-bar' + ( (attributes.progAnimation) ? ' progress-bar-animated' : '' ) + ( (attributes.progStripes) ? ' progress-bar-striped' : '' ),
-			// Se suple con un filtro en el editor (ver newWrapperAtts).
-			// style:{
-			// 	width: attributes.progRange+'%',
-			// },
+			className: 'item-progress bg-primary',
+			style:{
+				width: ( !attributes.progRange ? '1%' : attributes.progRange )+'%',
+			},
+		} );
+
+		// Valores item.
+		const viewblockProps = useBlockProps( {
+			// className: 'progress-bar m-0',
+			style:{
+				width: ( !attributes.progRange ? '1%' : attributes.progRange )+'%',
+				// margin: '0px !important',
+			},
+			// role:'progressbar',
 		} );
 
 		return (
@@ -206,9 +210,9 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 							type="number"
 							value={ attributes.progRange }
 							onChange={ ( newval ) =>
-								setAttributes( { progRange: parseInt( ( !newval || '0'===newval )?1:newval ) } )
+								setAttributes( { progRange: parseInt( newval ) } )
 							}
-							min="1"
+							min="0"
 							max="100"
 						/>
 						<ToggleControl
@@ -234,10 +238,14 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 						/>
 					</PanelBody>
 				</InspectorControls>
-
 				{/* El bloque */}
-				<p>{ attributes.progRange }</p>
-
+				{/* <div {...viewblockProps}
+					// aria-valuenow="10" 
+					// aria-valuemin="0" 
+					// aria-valuemax="100"
+				> */}
+					{ (!attributes.progLabel) ? attributes.progRange : null }
+				{/* </div> */}
 			</div>
 		)
 	},
@@ -250,72 +258,29 @@ registerBlockType('ekiline-blocks/ekiline-progress', {
 
 		// Clases y atributos auxiliares, incluir save.
 		const blockProps = useBlockProps.save( {
-			className: 'progress-bar' + ( (attributes.progAnimation) ? ' progress-bar-animated' : '' ) + ( (attributes.progStripes) ? ' progress-bar-striped' : '' ),
+			className: 'progress-bar',
 			style:{
-				width: attributes.progRange+'%',
+				width: ( !attributes.progRange ? '1%' : attributes.progRange + '%' ),
 			},
 		} );
 
+		function setClassNames(){
+			const addName = 'progress-bar';
+			if ( attributes.progStripes ){
+				addName += ' progress-bar-striped';
+			}
+			if ( attributes.progAnimation ){
+				addName += ' progress-bar-animated';
+			}
+			return (addName);
+		}
+
 		return (
 			<div { ...blockProps }>
-				{ (!attributes.progLabel) ? attributes.progRange : null }
+				<InnerBlocks.Content />
 			</div>
 		)
 
 	},
 
 });
-
-/**
- * Incorporar bloques a coleccion.
- */
- import { registerBlockCollection } from '@wordpress/blocks';
- registerBlockCollection( 'ekiline-blocks', {
-	 title: 'Ekiline Blocks',
-	 icon: 'layout',
- } );
-
-/**
- * Modificar envoltorio de editor para ver en tiempo real los cambios.
- * @link https://developer.wordpress.org/block-editor/reference-guides/filters/block-filters/
- * @link https://gist.github.com/tousignant-christopher/cd6d08c8145bb1866fd275fcb61890ca 
- * Conocer atributos.
- * console.log(props.name, props.attributes, props.attributes.progRange)
- */
-
-import { addFilter } from '@wordpress/hooks'; // este permite crear filtros.
-import { createHigherOrderComponent } from '@wordpress/compose'; // UI.
-
-const newWrapperAtts = createHigherOrderComponent( ( BlockListBlock ) => {
-	return ( props ) => {
-
-		// Aplicar solo a bloque item progress.
-		if( props.name === 'ekiline-blocks/ekiline-progress-item' ){
-
-			// Hook para maniobrar (wrapperProps).
-			const wrapperProps = {
-				...props.wrapperProps,
-				style : {
-					width: props.attributes.progRange+'%',
-				},
-			};
-
-			return (
-				<BlockListBlock { ...props }
-					// className={ 'myfix-' + props.clientId }
-					wrapperProps={ wrapperProps }
-				/>
-			);
-
-		}
-
-		return ( <BlockListBlock { ...props } /> );
-
-	};
-}, 'newWrapperAtts');
-
-addFilter(
-	'editor.BlockListBlock',
-	'ekiline-blocks/ekiline-progress-item',
-	newWrapperAtts
-);
