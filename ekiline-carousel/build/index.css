@@ -1,1 +1,19 @@
-.wp-block .wp-block-ekiline-blocks-ekiline-carousel{border:1px solid #e8e8e8}[class*=carousel-control]>*{background-color:var(--wp-admin-theme-color) !important}.carousel-indicators [data-bs-target]{background-color:var(--wp-admin-theme-color) !important}
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ * var(--wp-admin-theme-color)
+ */
+.wp-block .wp-block-ekiline-blocks-ekiline-carousel {
+  border: 1px solid #e8e8e8;
+}
+
+[class*=carousel-control] > * {
+  background-color: var(--wp-admin-theme-color) !important;
+}
+
+.carousel-indicators [data-bs-target] {
+  background-color: var(--wp-admin-theme-color) !important;
+}
+
+/*# sourceMappingURL=index.css.map*/
