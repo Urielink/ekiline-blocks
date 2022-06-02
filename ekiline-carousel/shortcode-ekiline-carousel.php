@@ -101,7 +101,9 @@ function ekiline_carousel_posts( $ppp = 3, $cat = array(), $findblock = null, $o
 			$info            = array();
 			$info['title']   = get_the_title();
 			$info['plink']   = get_the_permalink();
-			$info['excerpt'] = get_the_excerpt();
+			// $info['excerpt'] = get_the_excerpt();
+			// junio 2, limitar el texto.
+			$info['excerpt'] = ( has_excerpt() )?get_the_excerpt():'';
 			$info['content'] = get_the_content();
 
 			if ( has_post_thumbnail() ) {
