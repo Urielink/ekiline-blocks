@@ -1,17 +1,17 @@
 {
-	"$schema": "https://schemas.wp.org/trunk/block.json",
-	"apiVersion": 2,
-	"name": "ekiline-blocks/ekiline-accordion",
-	"version": "0.1.0",
-	"title": "Ekiline Accordion",
-	"category": "design",
-	"icon": "editor-insertmore",
-	"description": "Add an accordion to your content",
-	"supports": {
-		"html": false
-	},
-	"textdomain": "ekiline-accordion",
-	"editorScript": "file:./index.js",
-	"editorStyle": "file:./index.css",
-	"style": "file:./style-index.css"
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "ekiline-blocks/ekiline-accordion",
+  "version": "0.1.0",
+  "title": "Ekiline Accordion",
+  "category": "design",
+  "icon": "menu-alt",
+  "description": "Show your content as an accordion.",
+  "supports": {
+    "html": false
+  },
+  "textdomain": "ekiline-accordion",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
 }

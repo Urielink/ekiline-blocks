@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Ekiline Accordion
- * Description:       Add an accordion to your content
+ * Description:       Show your content as an accordion.
  * Requires at least: 5.8
  * Requires PHP:      7.0
  * Version:           0.1.0

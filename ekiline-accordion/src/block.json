@@ -5,8 +5,8 @@
 	"version": "0.1.0",
 	"title": "Ekiline Accordion",
 	"category": "design",
-	"icon": "editor-insertmore",
-	"description": "Add an accordion to your content",
+	"icon": "menu-alt",
+	"description": "Show your content as an accordion.",
 	"supports": {
 		"html": false
 	},
