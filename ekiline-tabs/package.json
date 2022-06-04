@@ -1,7 +1,7 @@
 {
 	"name": "ekiline-tabs",
 	"version": "0.1.0",
-	"description": "Aqui va la descripcion del plugin",
+	"description": "Add a tabs for your posts, full control.",
 	"author": "Uri Lazcano (Urielink)",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
@@ -10,15 +10,11 @@
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",
-		"start": "wp-scripts start",
-		"packages-update": "wp-scripts packages-update"
-	},
-	"dependencies": {
-		"@wordpress/block-editor": "^6.2.0",
-		"@wordpress/blocks": "^10.0.0",
-		"@wordpress/i18n": "^4.2.0"
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"start": "wp-scripts start"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^17.0.0"
+		"@wordpress/scripts": "^23.2.0"
 	}
 }

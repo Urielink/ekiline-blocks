@@ -4,7 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 import { registerBlockType } from '@wordpress/blocks';
-import { useBlockProps, InnerBlocks, InspectorControls, RichText } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, ToggleControl, TextControl } from '@wordpress/components';
 
 /**

@@ -83,7 +83,7 @@ registerBlockType( 'ekiline-blocks/ekiline-tabs', {
 		const PARENT_ALLOWED_BLOCKS = [ 'ekiline-blocks/ekiline-tabs-navbar', 'ekiline-blocks/ekiline-tabs-container' ];
 		const CHILD_TEMPLATE = [
 			[ 'ekiline-blocks/ekiline-tabs-navbar',{
-				className: 'is-style-nav-tabs',
+				// className: 'is-style-nav-tabs',
 			} ],
 			[ 'ekiline-blocks/ekiline-tabs-container' ]
 		];
@@ -169,25 +169,46 @@ registerBlockType( 'ekiline-blocks/ekiline-tabs-navbar', {
 			className: 'tabs-navbar',
 		} );
 
-		// Nueva clase de apoyo.
-		if ( attributes.className ){
-			function addnewClassName(clase){
-				if( clase.includes('is-style-nav-tabs') ){
-					if( clase.includes('nav-pills') ){
-						clase = clase.replaceAll('nav-pills', '')
-					}
-					clase = clase.replace('is-style-nav-tabs', 'nav-tabs')
+		// Precargar nombre ID.
+		// console.log(attributes.className)
+
+		var listaClase = attributes.className;
+
+		// if( listaClase === ('is-style-nav-tabs') ){
+		// 	var reemplazo = listaClase.replace('is-style-nav-tabs', 'nav-tabs');
+		// 	setAttributes( { className: reemplazo } );
+		// }
+
+		if ( listaClase ){
+
+			console.log(listaClase)
+			listaClase = listaClase.split(' ');
+			console.log(listaClase)
+
+			// listaClase.forEach(e => {
+			// 	if('is-style-nav-tabs'===e){
+			// 		listaClase.push( e.replace('is-style-', '') );
+			// 	}
+			// });
+			// console.log(listaClase)
+
+			var variantes = ['is-style-nav-tabs','is-style-nav-pills'];
+
+			for (let index = 0; index < listaClase.length; index++) {
+				if ( variantes.includes(listaClase[index]) ) {
+					listaClase[index] = listaClase[index].replace('is-style-', '');
+					// break;
 				}
-				if( clase.includes('is-style-nav-pills') ){
-					if( clase.includes('nav-tabs') ){
-						clase = clase.replaceAll('nav-tabs', '')
-					}
-					clase = clase.replace('is-style-nav-pills', 'nav-pills')
-				}
-				return clase;
 			}
-			setAttributes( { className: addnewClassName(attributes.className) } );
+
+			  console.log(listaClase);
+			  console.log( listaClase.join(' ') );
+
+			  setAttributes( { className: listaClase.join(' ') } );
+
 		}
+
+
 
 		return (
 			<div { ...blockProps }>
@@ -198,12 +219,22 @@ registerBlockType( 'ekiline-blocks/ekiline-tabs-navbar', {
 			</div>
 		);
 	},
+	save: ( { attributes } ) => {
 
-	save: () => {
+		// Nueva clase de apoyo.
+		function addnewClassName(clase=null){
+			// if( 'is-style-nav-tabs' === clase ){
+			// 	return ' nav-tabs';
+			// }
+			// else if ( 'is-style-nav-pills' === clase ){
+			// 	return ' nav-pills';
+			// }
+			return '';
+		}
 
 		// personalizar clase
 		const blockProps = useBlockProps.save( {
-			className: 'nav',
+			className: 'tabs-navbar nav' + addnewClassName(attributes.className),
 		} );
 
 		return (

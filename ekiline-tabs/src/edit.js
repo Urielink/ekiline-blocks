@@ -31,8 +31,8 @@ import './editor.scss';
  */
 export default function Edit() {
 	return (
-		<p { ...useBlockProps() }>
-			{ __( 'Ekiline Tabs – hello from the editor!', 'ekiline-tabs' ) }
+		<p {...useBlockProps()}>
+			{__('Ekiline Tabs – hello from the editor!', 'ekiline-tabs')}
 		</p>
 	);
 }
