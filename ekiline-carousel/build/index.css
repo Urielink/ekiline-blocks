@@ -1,1 +1,1 @@
-.wp-block .wp-block-ekiline-blocks-ekiline-carousel{border:1px solid #e8e8e8}[class*=carousel-control]>*{background-color:var(--wp-admin-theme-color) !important}.carousel-indicators [data-bs-target]{background-color:var(--wp-admin-theme-color) !important}
+.wp-block .wp-block-ekiline-blocks-ekiline-carousel{border:1px solid #e8e8e8}.carousel-indicators [data-bs-target],[class*=carousel-control]>*{background-color:var(--wp-admin-theme-color)!important}
