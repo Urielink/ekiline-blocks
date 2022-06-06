@@ -98,13 +98,23 @@ function ekiline_carousel_posts( $ppp = 3, $cat = array(), $findblock = null, $o
 
 			$carousel_query->the_post();
 
+			/**
+			 * Junio 2 2022, WP6 corregir la salida de extracto.
+			 * Condiciones nuevas para extracto.
+			 */
+			$new_excerpt = '';
+			if ( strpos( get_the_content(), '<!--more-->' ) ) {
+				$new_excerpt = get_the_content();
+			}
+			else {
+				$new_excerpt = wp_trim_words( get_the_content(), 55, '...' );
+			}
+
 			$info            = array();
 			$info['title']   = get_the_title();
 			$info['plink']   = get_the_permalink();
-			// $info['excerpt'] = get_the_excerpt();
-			// junio 2, limitar el texto.
-			$info['excerpt'] = ( has_excerpt() )?get_the_excerpt():'';
 			$info['content'] = get_the_content();
+			$info['excerpt'] = ( has_excerpt() )?get_the_excerpt():$new_excerpt;
 
 			if ( has_post_thumbnail() ) {
 				$thumb_id        = get_post_thumbnail_id();
