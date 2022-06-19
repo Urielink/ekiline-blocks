@@ -32,10 +32,10 @@ import './editor.scss';
 export default function Edit() {
 	return (
 		<p {...useBlockProps()}>
-			{__(
-				'Ekiline Popovers – hello from the editor!',
-				'ekiline-popovers'
-			)}
+			{__( 'Popovers have rules added to the core buttons.', 'ekiline-popovers' )}
+			{__( 'You need to create a button. And then text an anchor (#name) link.', 'ekiline-popovers' )}
+			{__( 'This will allow you to use the advanced options for the button.', 'ekiline-popovers' )}
+			{__( 'You can remove this notice, it won\'t be published in your content.', 'ekiline-popovers' )}
 		</p>
 	);
 }

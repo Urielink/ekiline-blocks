@@ -4,6 +4,40 @@
  * Replace them with your own styles or remove the file completely.
  */
 
-.wp-block-ekiline-blocks-ekiline-popovers {
-	border: 1px dotted #f00;
+ .wp-block-ekiline-blocks-ekiline-popovers {
+	border: 2px solid #000;
+	border-radius: 2px !important;
+	background-color: #ffff00;
+	padding: 10px;
+}
+
+.wp-block-ekiline-blocks-ekiline-popovers.is-selected,
+.wp-block-ekiline-blocks-ekiline-popovers.has-child-selected {
+	border: 1px solid #000000;
+}
+
+.wp-block-ekiline-blocks-ekiline-popovers .item-title{
+	border-bottom: 1px dashed #c8c8c8;
+	margin-bottom:10px;
+	padding: 5px;
+}
+
+.wp-block-ekiline-blocks-ekiline-popovers .child-item-popovers.is-selected .item-title{
+	border-bottom: 1px solid #c8c8c8;
+}
+
+
+.editor-popovers-route:not(.has-anchor){
+	background-color:#000;
+	color: #fff;
+	padding: 5px;
+	margin: 0px;
+}
+
+.editor-popovers-route.has-anchor{
+	background-color: #efefef;
+}
+.editor-popovers-route pre{
+	margin-bottom: 0px !important;
+	padding: 10px;
 }

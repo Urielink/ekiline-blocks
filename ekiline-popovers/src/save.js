@@ -24,11 +24,12 @@ import { useBlockProps } from '@wordpress/block-editor';
  */
 export default function save() {
 	return (
-		<p {...useBlockProps.save()}>
-			{__(
-				'Ekiline Popovers – hello from the saved content!',
-				'ekiline-popovers'
-			)}
-		</p>
+		<></>
+		// <p {...useBlockProps.save()}>
+		// 	{__(
+		// 		'Ekiline Popovers – hello from the saved content!',
+		// 		'ekiline-popovers'
+		// 	)}
+		// </p>
 	);
 }
