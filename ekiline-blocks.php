@@ -97,6 +97,10 @@ require plugin_dir_path( __FILE__ ) . '/ekiline-popovers/ekiline-popovers.php';
  * Bloque Progress
  **/
 require plugin_dir_path( __FILE__ ) . '/ekiline-progress/ekiline-progress.php';
+/**
+ * Bloque toast
+ **/
+require plugin_dir_path( __FILE__ ) . '/ekiline-toast/ekiline-toast.php';
 
 
 /**

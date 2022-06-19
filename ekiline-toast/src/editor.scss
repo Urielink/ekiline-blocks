@@ -1,0 +1,42 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+
+ .wp-block-ekiline-blocks-ekiline-toast {
+	border: 1px dashed #c8c8c8;
+	border-radius: 2px !important;
+}
+
+.wp-block-ekiline-blocks-ekiline-toast.is-selected,
+.wp-block-ekiline-blocks-ekiline-toast.has-child-selected {
+	border: 1px solid #000000;
+}
+
+.wp-block-ekiline-blocks-ekiline-toast .item-title{
+	border-bottom: 1px dashed #c8c8c8;
+	margin-bottom:10px;
+	padding: 5px;
+}
+
+.wp-block-ekiline-blocks-ekiline-toast .child-item-toast.is-selected .item-title{
+	border-bottom: 1px solid #c8c8c8;
+}
+
+
+.editor-toast-route:not(.has-anchor){
+	background-color:#000;
+	color: #fff;
+	padding: 5px;
+	margin: 0px;
+}
+
+.editor-toast-route.has-anchor{
+	background-color: #efefef;
+}
+.editor-toast-route pre{
+	margin-bottom: 0px !important;
+	padding: 10px;
+}
