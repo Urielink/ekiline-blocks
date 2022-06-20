@@ -102,7 +102,6 @@ add_action( 'wp_enqueue_scripts', 'ekiline_block_modal_inline_script', 100 );
 
 /**
  * Código JS complementario.
- * Afecta al marcado de los banners, dependen de la clase css .adsbygoogle.
  */
 function ekiline_block_modal_scripts_code() {
 $code = '

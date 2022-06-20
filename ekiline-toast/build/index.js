@@ -201,10 +201,11 @@ __webpack_require__.r(__webpack_exports__);
    */
   title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Ekiline toast, full control', 'ekiline-toast'),
   icon: 'lightbulb',
-  description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Show little advices as bootstrap style.', 'ekiline-toast'),
+  description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Show small bootstrap-style notices.', 'ekiline-toast'),
   category: 'design',
   supports: {
-    anchor: true
+    anchor: true,
+    html: false
   },
 
   /**
@@ -212,6 +213,105 @@ __webpack_require__.r(__webpack_exports__);
    */
   attributes: {
     toastPosition: {
+      type: 'string',
+      default: ' bottom-0 end-0'
+    }
+  },
+
+  /**
+   * @see ./edit.js
+   */
+  // edit: Edit,
+  edit: props => {
+    const {
+      attributes,
+      setAttributes
+    } = props;
+    const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)({
+      className: 'group-toast'
+    }); // Restringir los bloques, Cargar un preset.
+
+    const PARENT_ALLOWED_BLOCKS = ['ekiline-blocks/ekiline-toast-item'];
+    const CHILD_TEMPLATE = [['ekiline-blocks/ekiline-toast-item', {
+      lock: {
+        remove: false,
+        move: true
+      }
+    }]];
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Toast group options', 'ekiline-toast'),
+      initialOpen: true
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Display position', 'ekiline-toast'),
+      value: attributes.toastPosition,
+      options: [{
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Bottom right', 'ekiline-toast'),
+        value: ' bottom-0 end-0'
+      }, {
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Bottom left', 'ekiline-toast'),
+        value: ' bottom-0 start-0'
+      }, {
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Top right', 'ekiline-toast'),
+        value: ' top-0 end-0'
+      }, {
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Top left', 'ekiline-toast'),
+        value: ' top-0 start-0'
+      }],
+      onChange: toastPosition => setAttributes({
+        toastPosition
+      })
+    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks, {
+      allowedBlocks: PARENT_ALLOWED_BLOCKS,
+      template: CHILD_TEMPLATE
+    }));
+  },
+
+  /**
+   * @see ./save.js
+   */
+  // save,
+  save: _ref => {
+    let {
+      attributes
+    } = _ref;
+    const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps.save({
+      className: 'toast-container position-fixed p-md-1 p-md-3' + attributes.toastPosition
+    });
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks.Content, null));
+  }
+});
+/**
+ * Toast Item.
+ */
+
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__.registerBlockType)('ekiline-blocks/ekiline-toast-item', {
+  title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Ekiline toast item.', 'ekiline-toast'),
+  parent: ['ekiline-blocks/ekiline-toast'],
+  icon: 'lightbulb',
+  description: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Each toast can be executed by time, at the end of scrolling, or with the cursor outside the window. You can stack as many as you need.', 'ekiline-toast'),
+  category: 'design',
+  supports: {
+    anchor: true,
+    html: false,
+    multiple: false,
+    reusable: true // inserter: false,
+
+  },
+
+  /**
+   * Argumentos para personalizacion.
+   */
+  attributes: {
+    content: {
+      type: 'string',
+      source: 'html',
+      selector: 'p'
+    },
+    toastTime: {
+      type: 'number',
+      default: 0
+    },
+    toastScroll: {
       type: 'boolean',
       default: false
     }
@@ -227,50 +327,60 @@ __webpack_require__.r(__webpack_exports__);
       setAttributes
     } = props;
     const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)({
-      className: 'group-toast'
-    });
+      className: 'toast-item'
+    }); // Cargar un preset.
+
+    const CHILD_TEMPLATE = [['core/paragraph', {
+      content: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Add toast content.', 'ekiline-modal')
+    }]];
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InspectorControls, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
       title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Toast Params', 'ekiline-toast'),
       initialOpen: true
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Toast position', 'ekiline-toast'),
-      checked: attributes.toastPosition,
-      onChange: toastPosition => setAttributes({
-        toastPosition
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Run by time', 'ekiline-toast'),
+      type: "number",
+      value: attributes.toastTime,
+      onChange: newval => setAttributes({
+        toastTime: parseInt(newval)
+      }),
+      help: attributes.toastTime > 0 ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Run after page load "' + attributes.toastTime + '" milliseconds.', 'ekiline-toast') : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('"' + attributes.toastTime + '" run immediately on page load.', 'ekiline-toast')
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Run at end of page scroll.', 'ekiline-toast'),
+      checked: attributes.toastScroll,
+      onChange: toastScroll => setAttributes({
+        toastScroll
       })
-    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks, null));
+    }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.RichText, {
+      tagName: "p",
+      value: attributes.content,
+      allowedFormats: ['core/bold', 'core/italic'],
+      onChange: content => setAttributes({
+        content
+      }),
+      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)('Add toast title', 'ekiline-toast'),
+      className: 'item-title'
+    }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks, {
+      template: CHILD_TEMPLATE
+    }));
   },
 
   /**
    * @see ./save.js
    */
   // save,
-  save: _ref => {
+  save: _ref2 => {
     let {
       attributes
-    } = _ref;
+    } = _ref2;
     const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps.save({
-      className: 'toast',
-      style: {
-        'min-height': attributes.toastPosition ? '300px' : null
-      }
-    }); // Condicion para crear envoltorio.
-
-    function ToastWrapper() {
-      if (attributes.toastPosition) {
-        return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-          style: attributes.toastPosition ? blockProps.contentStyle : null
-        }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks.Content, null));
-      } else {
-        return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks.Content, null);
-      }
-    }
-
+      className: 'toast-item toast' + (attributes.toastScroll ? ' launch-scroll hide' : '') + (attributes.toastTime !== 0 ? ' launch-time hide' : ''),
+      'data-ek-launch-time': attributes.toastTime || null
+    });
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", blockProps, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       class: "toast-header"
-    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", {
-      class: "me-auto"
-    }, "Bootstrap"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "11 mins ago"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+      class: "me-auto my-0"
+    }, attributes.content), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
       type: "button",
       class: "btn-close",
       "data-bs-dismiss": "toast",
