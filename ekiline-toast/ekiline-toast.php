@@ -50,16 +50,16 @@ $code = '
 // Abrir un toast programado.
 function ekiline_launch_toast(){
 	// Bucar un toast programado.
-	const toastProgramado = document.querySelectorAll(\'[data-ek-launch-time]\');
+	var toastProgramado = document.querySelectorAll(\'[data-ek-launch-time]\');
 	// Si existe ejecutar.
 	if(0!==toastProgramado.length){
 		toastProgramado.forEach(function (toastItem) {
 			// Toast programado.
-			const nuevoToast = new bootstrap.Toast(toastItem, {
+			var nuevoToast = new bootstrap.Toast(toastItem, {
 				autohide: false
 			});
 			// Tiempo de lanzado.
-			const toastData = toastItem.dataset.ekLaunchTime;
+			var toastData = toastItem.dataset.ekLaunchTime;
 			setTimeout(
 				function() {
 					// Mostrar.
@@ -72,6 +72,33 @@ function ekiline_launch_toast(){
 	}
 }
 ekiline_launch_toast();
+
+// Abrir un toast con scroll.
+function ekiline_scroll_toast(){
+	// Buscar un toast programado.
+	var toastScroll = document.querySelectorAll(\'.launch-scroll\');
+	// Si existe ejecutar.
+	if(0!==toastScroll.length){
+		toastScroll.forEach(function (toastItem) {
+			// Toast programado.
+			var nuevoToast = new bootstrap.Toast(toastItem, {
+				autohide: false
+			});
+			// Activacion por scroll.
+			window.addEventListener(\'scroll\',
+				function() {
+					if( (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 200) ) {
+						nuevoToast.show();
+					} 
+				}
+			);
+
+		});
+	}
+}
+ekiline_scroll_toast();
 ';
 return $code;
 }
+
+?>
